@@ -146,7 +146,7 @@
         <div class="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-sm min-w-[95px] sm:min-w-[115px]">
           <span class="text-xs text-white/80 font-medium block mb-1">الهيئة الإدارية</span>
           <span class="text-2xl sm:text-3xl font-black text-white" id="stat-executive-count">0</span>
-          <span class="text-[10px] sm:text-[11px] text-white/80 font-medium mt-1 block">مرشحاً وقائمة</span>
+          <span class="text-[10px] sm:text-[11px] text-white/80 font-medium mt-1 block">مرشحاً للأمانة</span>
         </div>
       </div>
     </div>
@@ -159,7 +159,7 @@
     </div>
     <h3 class="text-xl font-black text-tertiary mb-2">مرحباً بك في منظومة الانتخابات</h3>
     <p class="text-slate-500 text-sm max-w-md mx-auto mb-6">
-      لم يتم فتح جلسة تصويت بعد. يمكنك الدخول إلى لوحة الإدارة لإنشاء الجلسة وإدخال المرشحين للهيئة الإدارية والهيئة الرقابية.
+      لم يتم فتح جلسة تصويت بعد. يمكنك الدخول إلى لوحة الإدارة لإنشاء الجلسة وإدخال مرشحي الهيئة الإدارية والهيئة الرقابية.
     </p>
     <button onclick="openAdminModal()" class="px-6 py-3 bg-primary hover:bg-[#00626a] text-white font-bold rounded-2xl text-sm transition shadow-lg inline-flex items-center gap-2">
       <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
@@ -167,7 +167,7 @@
     </button>
   </div>
 
-  <!-- SEARCH & MAIN BODY FILTER TABS (Shown when session is active) -->
+  <!-- SEARCH & MAIN BODY FILTER TABS -->
   <div id="controls-bar" class="bg-white rounded-2xl p-4 shadow-sm border border-border-subtle mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
     <!-- Search Bar -->
     <div class="relative flex-1">
@@ -181,14 +181,11 @@
       <button id="filter-tab-all" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-primary text-white shadow">
         الكل
       </button>
+      <button id="filter-tab-exec" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
+        🏛️ الهيئة الإدارية (الأمين العام)
+      </button>
       <button id="filter-tab-oversight" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
         🏆 الهيئة الرقابية
-      </button>
-      <button id="filter-tab-exec-indiv" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
-        🏛️ الهيئة الإدارية (فردي)
-      </button>
-      <button id="filter-tab-exec-team" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
-        👥 الهيئة الإدارية (قوائم كاملة)
       </button>
 
       <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
@@ -212,7 +209,7 @@
 
   <!-- ================= MODAL 1: ADMIN PANEL (Protected by PIN) ================= -->
   <div id="admin-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
       
       <!-- Admin Modal Header -->
       <div class="p-6 bg-gradient-to-r from-[#1a2f4c] to-[#0e7c86] text-white flex items-center justify-between">
@@ -222,7 +219,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold">لوحة إدارة الانتخابات</h3>
-            <p class="text-xs text-white/80">إعداد الجلسة، إضافة المرشحين والقوائم، وإغلاق وتوثيق الأرشيف</p>
+            <p class="text-xs text-white/80">إعداد الجلسة، تعبئة المرشحين وتوضيح مناصب الفرق، وتوثيق الأرشيف</p>
           </div>
         </div>
         <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
@@ -230,13 +227,13 @@
         </button>
       </div>
 
-      <!-- PIN AUTH LAYER (Shown if not verified) -->
+      <!-- PIN AUTH LAYER -->
       <div id="admin-pin-step" class="p-8 text-center flex-1 flex flex-col items-center justify-center">
         <div class="w-16 h-16 rounded-2xl bg-orange-50 text-accent-orange border border-orange-200 flex items-center justify-center mb-4">
           <span class="material-symbols-outlined text-[36px]">lock</span>
         </div>
         <h4 class="text-lg font-bold text-tertiary mb-1">أدخل رمز الحماية الإداري (PIN)</h4>
-        <p class="text-xs text-slate-500 max-w-xs mb-5">مخصص لرئيس لجنة الانتخابات فقط لحماية إعدادات الجلسة والأسماء (الرمز الافتراضي: 1234)</p>
+        <p class="text-xs text-slate-500 max-w-xs mb-5">مخصص لرئيس لجنة الانتخابات فقط (الرمز الافتراضي: 1234)</p>
         
         <form id="admin-pin-form" class="flex flex-col items-center gap-3 w-full max-w-xs">
           <input type="password" id="admin-pin-input" placeholder="أدخل رمز PIN" required autofocus maxlength="10"
@@ -247,7 +244,7 @@
         </form>
       </div>
 
-      <!-- ADMIN CONTROLS CONTENT (Shown after PIN verified) -->
+      <!-- ADMIN CONTROLS CONTENT -->
       <div id="admin-controls-step" class="p-6 overflow-y-auto space-y-6 flex-1 hidden">
 
         <!-- 1. SESSION CREATION SECTION -->
@@ -265,7 +262,7 @@
               <label for="new-session-title" class="block text-xs font-bold text-slate-700 mb-1">
                 عنوان الجلسة الانتخابية <span class="text-accent-red">*</span>
               </label>
-              <input type="text" id="new-session-title" required placeholder="مثال: انتخابات تجمع الطلبة السوريين في قونيا - الدورة الانتخابية 2026"
+              <input type="text" id="new-session-title" required placeholder="مثال: انتخابات تجمع الطلبة السوريين في قونيا - 2026"
                      class="w-full h-10 px-3 text-sm rounded-xl border border-slate-300 focus:border-primary outline-none"/>
             </div>
 
@@ -276,11 +273,11 @@
           </form>
         </div>
 
-        <!-- 2. ADD CANDIDATE / TEAM FORM SECTION -->
+        <!-- 2. ADD CANDIDATE FORM SECTION -->
         <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
           <h4 class="font-extrabold text-base text-tertiary mb-3 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-[20px]">person_add</span>
-            <span>2. إضافة مرشح أو قائمة انتخابية</span>
+            <span>2. إضافة مرشح للهيئة الإدارية أو الرقابية</span>
           </h4>
 
           <form id="admin-candidate-form" class="space-y-4">
@@ -290,39 +287,27 @@
               <div>
                 <label for="admin-select-body" class="block text-xs font-bold text-slate-700 mb-1">الهيئة الانتخابية <span class="text-accent-red">*</span></label>
                 <select id="admin-select-body" required class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white font-bold text-slate-800">
-                  <option value="الهيئة الرقابية">الهيئة الرقابية (Oversight Board)</option>
-                  <option value="الهيئة الإدارية">الهيئة الإدارية (Executive Board)</option>
+                  <option value="الهيئة الإدارية">الهيئة الإدارية (تصويت للأمين العام)</option>
+                  <option value="الهيئة الرقابية">الهيئة الرقابية (تصويت فردي مباشر)</option>
                 </select>
               </div>
 
-              <!-- Select Nomination Type (Shown if Executive) -->
-              <div id="admin-nomination-type-box" class="hidden">
-                <label for="admin-select-type" class="block text-xs font-bold text-slate-700 mb-1">ظرف الترشح في الهيئة الإدارية <span class="text-accent-red">*</span></label>
-                <select id="admin-select-type" class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white font-bold text-slate-800">
-                  <option value="فردي">ترشح بشكل فردي (حسب المنصب)</option>
-                  <option value="فريق">ترشح كفريق / قائمة كاملة</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- Position Dropdown (Shown for Individual) -->
-              <div id="admin-position-box">
-                <label for="admin-select-position" class="block text-xs font-bold text-slate-700 mb-1">المنصب الانتخابي <span class="text-accent-red">*</span></label>
-                <select id="admin-select-position" class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white font-semibold text-slate-800">
-                  <!-- Injected via JS based on selected body -->
-                </select>
-              </div>
-
-              <!-- Candidate or Team Name -->
+              <!-- General Secretary / Candidate Name -->
               <div>
-                <label id="admin-name-label" for="admin-cand-name" class="block text-xs font-bold text-slate-700 mb-1">اسم المرشح الكامل <span class="text-accent-red">*</span></label>
-                <input type="text" id="admin-cand-name" required placeholder="أدخل اسم المرشح الثلاثي"
+                <label id="admin-name-label" for="admin-cand-name" class="block text-xs font-bold text-slate-700 mb-1">اسم مرشح الأمين العام <span class="text-accent-red">*</span></label>
+                <input type="text" id="admin-cand-name" required placeholder="أدخل الاسم الثلاثي لمرشح الأمين العام"
                        class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white"/>
               </div>
             </div>
 
-            <!-- University Dropdown Selection -->
+            <!-- Optional Team Name for Executive Board -->
+            <div id="admin-team-name-box">
+              <label for="admin-team-name" class="block text-xs font-bold text-slate-700 mb-1">اسم القائمة / الفريق (اختياري)</label>
+              <input type="text" id="admin-team-name" placeholder="مثال: قائمة الأمل الطلابي (أو اتركه فارغاً للترشح الفردي)"
+                     class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white"/>
+            </div>
+
+            <!-- Select University Dropdown -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label for="admin-select-university" class="block text-xs font-bold text-slate-700 mb-1">الجامعة <span class="text-accent-red">*</span></label>
@@ -335,22 +320,53 @@
               </div>
 
               <div>
-                <label for="admin-cand-faculty" class="block text-xs font-bold text-slate-700 mb-1">الكلية والتخصص الدراسيات <span class="text-accent-red">*</span></label>
-                <input type="text" id="admin-cand-faculty" required placeholder="مثال: كلية الهندسة - ميكاترونكس"
+                <label for="admin-cand-faculty" class="block text-xs font-bold text-slate-700 mb-1">الكلية والتخصص الدراسي <span class="text-accent-red">*</span></label>
+                <input type="text" id="admin-cand-faculty" required placeholder="مثال: كلية الطب - سنة رابعة"
                        class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white"/>
               </div>
             </div>
 
-            <!-- Team Members Textarea (Shown when "فريق" selected) -->
-            <div id="admin-team-members-box" class="hidden">
-              <label for="admin-team-members" class="block text-xs font-bold text-slate-700 mb-1">توزيع المناصب وأعضاء القائمة الانتخابية</label>
-              <textarea id="admin-team-members" rows="2" placeholder="مثال: الأمين العام: أحمد العلي | المكتب المالي: سارة محمود | المكتب الإعلامي: خالد..."
-                        class="w-full p-2.5 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white"></textarea>
+            <!-- TEAM ROLES DISPLAY SETUP (For Executive Board Display Clarification) -->
+            <div id="admin-team-roles-box" class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                <span class="text-xs font-bold text-tertiary flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[16px] text-primary">groups</span>
+                  <span>أسماء أعضاء الفريق ومناصبهم السبعة (توضيحية للمصوتين)</span>
+                </span>
+                <span class="text-[10px] text-slate-400">اختياري للعرض والتوضيح</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-0.5">المكتب المالي:</label>
+                  <input type="text" id="role-financial" placeholder="اسم مسؤول المكتب المالي" class="w-full h-8 px-2.5 text-xs rounded-lg border border-slate-300 bg-slate-50"/>
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-0.5">المكتب الأكاديمي:</label>
+                  <input type="text" id="role-academic" placeholder="اسم مسؤول المكتب الأكاديمي" class="w-full h-8 px-2.5 text-xs rounded-lg border border-slate-300 bg-slate-50"/>
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-0.5">مكتب الأنشطة:</label>
+                  <input type="text" id="role-activities" placeholder="اسم مسؤول مكتب الأنشطة" class="w-full h-8 px-2.5 text-xs rounded-lg border border-slate-300 bg-slate-50"/>
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-0.5">مكتب الطالبات:</label>
+                  <input type="text" id="role-female" placeholder="اسم مسؤولة مكتب الطالبات" class="w-full h-8 px-2.5 text-xs rounded-lg border border-slate-300 bg-slate-50"/>
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-0.5">مكتب شؤون الطلبة:</label>
+                  <input type="text" id="role-student-affairs" placeholder="اسم مسؤول شؤون الطلبة" class="w-full h-8 px-2.5 text-xs rounded-lg border border-slate-300 bg-slate-50"/>
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-0.5">المكتب الإعلامي:</label>
+                  <input type="text" id="role-media" placeholder="اسم مسؤول المكتب الإعلامي" class="w-full h-8 px-2.5 text-xs rounded-lg border border-slate-300 bg-slate-50"/>
+                </div>
+              </div>
             </div>
 
             <button type="submit" class="w-full py-2.5 bg-primary hover:bg-[#00626a] text-white font-bold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
               <span class="material-symbols-outlined text-[18px]">add_circle</span>
-              <span>إدراج المرشح / القائمة في الجلسة</span>
+              <span>إدراج المرشح في الجلسة الانتخابية</span>
             </button>
           </form>
 
@@ -412,7 +428,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold">أرشيف الجلسات الانتخابية السابقة</h3>
-            <p class="text-xs text-white/80">عرض توثيق ونتائج الجلسات المحفوظة ورؤساء وأعضاء الهيئات الفائزة</p>
+            <p class="text-xs text-white/80">عرض توثيق نتائج الجلسات ورؤساء وأعضاء الهيئات الفائزة</p>
           </div>
         </div>
         <button onclick="closeArchiveModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
@@ -489,22 +505,11 @@
 
 <!-- INTERACTIVE SCRIPT ENGINE -->
 <script>
-  // Executive Individual Positions Constant
-  const EXECUTIVE_POSITIONS = [
-    "الأمين العام",
-    "المكتب المالي",
-    "المكتب الأكاديمي",
-    "مكتب الأنشطة",
-    "مكتب الطالبات",
-    "مكتب شؤون الطلبة",
-    "المكتب الإعلامي"
-  ];
-
   // Storage Keys
-  const STORAGE_CURRENT_SESSION = 'sotkonya_session_v3';
-  const STORAGE_ARCHIVED_SESSIONS = 'sotkonya_archives_v3';
-  const STORAGE_USER_VOTED_MAP = 'sotkonya_voted_map_v3';
-  const STORAGE_ADMIN_PIN = 'sotkonya_admin_pin_v3';
+  const STORAGE_CURRENT_SESSION = 'sotkonya_session_v4';
+  const STORAGE_ARCHIVED_SESSIONS = 'sotkonya_archives_v4';
+  const STORAGE_USER_VOTED_MAP = 'sotkonya_voted_map_v4';
+  const STORAGE_ADMIN_PIN = 'sotkonya_admin_pin_v4';
 
   let adminPin = localStorage.getItem(STORAGE_ADMIN_PIN) || '1234';
   let isAdminVerified = false;
@@ -560,7 +565,6 @@
     } catch(e) {}
   }
 
-  // Synchronize across tabs
   window.addEventListener('storage', function(e) {
     if (e.key === STORAGE_CURRENT_SESSION) {
       currentSession = loadCurrentSession();
@@ -615,15 +619,15 @@
     if (currentSession.status === 'draft') {
       statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/30 text-amber-100 text-xs font-bold border border-white/20";
       statusBadge.innerHTML = `<span class="material-symbols-outlined text-[15px]">edit_note</span> الجلسة قيد الإعداد (مسودة)`;
-      descText.textContent = "تم إنشاء الجلسة. يمكنك إضافة وتعديل المرشحين والقوائم من لوحة الإدارة ثم فتح التصويت للعامة.";
+      descText.textContent = "تم إنشاء الجلسة. يمكنك إضافة وتعديل المرشحين وتشكيلات الفرق من لوحة الإدارة ثم فتح التصويت للعامة.";
     } else if (currentSession.status === 'active') {
       statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-100 text-xs font-bold border border-white/20";
       statusBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> التصويت المباشر نشط ومفتوح`;
-      descText.textContent = "التصويت مباشر ولحظي للهيئة الرقابية وللهيئة الإدارية (الفردي والقوائم). اختر مرشحك واضغط تصويت!";
+      descText.textContent = "التصويت مباشر للهيئة الإدارية (مرشحي منصب الأمين العام) وللهيئة الرقابية. اختر مرشحك واضغط تصويت!";
     } else {
       statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-700/50 text-slate-200 text-xs font-bold border border-white/20";
       statusBadge.innerHTML = `<span class="material-symbols-outlined text-[15px]">lock</span> الجلسة مغلقة ومؤرشفة نهائياً`;
-      descText.textContent = "تم إغلاق التصويت وتوثيق الفائزين ورؤساء وأعضاء الهيئات لهذه الجلسة وحفظها في الأرشيف.";
+      descText.textContent = "تم إغلاق التصويت وتوثيق الفائزين برئاسة الهيئة الإدارية وأعضاء الهيئة الرقابية وحفظها في الأرشيف.";
     }
   }
 
@@ -639,22 +643,149 @@
       const q = currentSearchQuery.toLowerCase();
       candidates = candidates.filter(c => 
         c.name.toLowerCase().includes(q) || 
+        (c.teamName && c.teamName.toLowerCase().includes(q)) ||
         c.university.toLowerCase().includes(q) ||
-        (c.faculty && c.faculty.toLowerCase().includes(q)) ||
-        (c.position && c.position.toLowerCase().includes(q))
+        (c.faculty && c.faculty.toLowerCase().includes(q))
       );
     }
 
     const isClosed = currentSession.status === 'closed';
 
-    // 1. SECTION: HEY'AT AL-RAQABA (OVERSIGHT BOARD)
+    // 1. SECTION: EXECUTIVE BOARD (EXECUTIVE ADMINISTRATIVE BOARD - GENERAL SECRETARY VOTE)
+    if (activeBodyFilter === 'all' || activeBodyFilter === 'exec') {
+      const execCandidates = candidates.filter(c => c.body === 'الهيئة الإدارية');
+      const totalExecVotes = currentSession.candidates
+        .filter(c => c.body === 'الهيئة الإدارية')
+        .reduce((sum, c) => sum + c.votes, 0);
+
+      let maxExecVotes = Math.max(...execCandidates.map(c => c.votes));
+
+      const secEl = document.createElement('section');
+      secEl.className = 'space-y-4';
+      secEl.innerHTML = `
+        <div class="bg-white p-5 rounded-2xl border-r-4 border-r-primary border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-[#166380] text-white flex items-center justify-center shadow-md font-bold">
+              <span class="material-symbols-outlined text-[26px]">account_balance</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-xl font-black text-tertiary">انتخابات الهيئة الإدارية (منصب الأمين العام)</h3>
+                <span class="text-xs px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-950 font-bold border border-teal-200">${execCandidates.length} مرشحاً</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">التصويت مخصص لمرشحي منصب الأمين العام / القوائم الإدارية (تظهر تفاصيل أعضاء الفريق للتوضيح)</p>
+            </div>
+          </div>
+          <div class="text-xs bg-slate-50 text-slate-600 px-3.5 py-1.5 rounded-xl border border-slate-200 font-medium self-start sm:self-auto">
+            مجموع أصوات الهيئة الإدارية (<span class="font-bold text-primary">${totalExecVotes.toLocaleString('ar-EG')}</span> صوت)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-exec"></div>
+      `;
+      mainContainer.appendChild(secEl);
+
+      const gridEl = secEl.querySelector('#grid-exec');
+      if (execCandidates.length === 0) {
+        gridEl.innerHTML = `<div class="col-span-full p-8 text-center bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 text-sm">لا يوجد مرشحون لانتخابات الهيئة الإدارية حتى الآن.</div>`;
+      } else {
+        execCandidates.forEach(cand => {
+          const pct = totalExecVotes > 0 ? ((cand.votes / totalExecVotes) * 100).toFixed(1) : 0;
+          const isWinner = isClosed && maxExecVotes > 0 && cand.votes === maxExecVotes;
+
+          const sessionUserVotes = userVotedMap[currentSession.id] || [];
+          const hasVotedThis = sessionUserVotes.includes(cand.id);
+
+          const card = document.createElement('div');
+          card.id = `candidate-card-${cand.id}`;
+          card.className = `bg-white rounded-2xl border ${isWinner ? 'border-amber-400 ring-4 ring-amber-400/30' : hasVotedThis ? 'border-teal-400 ring-2 ring-teal-400/20' : 'border-border-subtle'} p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
+
+          // Format team roles if present
+          let rolesHtml = '';
+          if (cand.teamRoles && Object.keys(cand.teamRoles).some(k => cand.teamRoles[k])) {
+            rolesHtml = `
+              <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 mb-4 text-xs space-y-1">
+                <span class="font-bold text-tertiary block mb-1.5 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[15px] text-primary">groups</span>
+                  <span>تشكيلة الفريق والمكاتب التوضيحية:</span>
+                </span>
+                <div class="grid grid-cols-1 gap-1 text-[11px] text-slate-600">
+                  ${cand.teamRoles.financial ? `<div>• <strong>المكتب المالي:</strong> ${cand.teamRoles.financial}</div>` : ''}
+                  ${cand.teamRoles.academic ? `<div>• <strong>المكتب الأكاديمي:</strong> ${cand.teamRoles.academic}</div>` : ''}
+                  ${cand.teamRoles.activities ? `<div>• <strong>مكتب الأنشطة:</strong> ${cand.teamRoles.activities}</div>` : ''}
+                  ${cand.teamRoles.female ? `<div>• <strong>مكتب الطالبات:</strong> ${cand.teamRoles.female}</div>` : ''}
+                  ${cand.teamRoles.studentAffairs ? `<div>• <strong>مكتب شؤون الطلبة:</strong> ${cand.teamRoles.studentAffairs}</div>` : ''}
+                  ${cand.teamRoles.media ? `<div>• <strong>المكتب الإعلامي:</strong> ${cand.teamRoles.media}</div>` : ''}
+                </div>
+              </div>
+            `;
+          }
+
+          card.innerHTML = `
+            <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-primary to-tertiary"></div>
+
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-3 pt-1">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-950 border border-teal-200">
+                  <span class="material-symbols-outlined text-[14px] text-primary">star</span>
+                  مرشح الأمين العام
+                </span>
+                <div class="flex items-center gap-1 flex-wrap justify-end">
+                  ${isWinner ? `<span class="text-[10px] font-extrabold text-amber-950 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-0.5">🏆 الأمين العام الفائز</span>` : ''}
+                  ${hasVotedThis ? '<span class="text-[10px] font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">check</span> تم تصويتك</span>' : ''}
+                  <span class="text-xs text-slate-400 font-semibold bg-slate-100 px-2 py-0.5 rounded-md">#${cand.id}</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3.5 mb-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-teal-50 text-primary border border-teal-200 flex items-center justify-center font-black text-xl shadow-inner shrink-0">
+                  ${cand.name.charAt(0)}
+                </div>
+                <div class="min-w-0">
+                  <h4 class="font-extrabold text-base sm:text-lg text-slate-800 leading-snug truncate">${cand.name}</h4>
+                  ${cand.teamName ? `<div class="text-xs font-bold text-tertiary mt-0.5 truncate">قائمة: ${cand.teamName}</div>` : ''}
+                  <div class="flex items-center gap-1 text-xs text-slate-500 mt-0.5 truncate">
+                    <span class="material-symbols-outlined text-[15px] text-slate-400">school</span>
+                    <span class="truncate" title="${cand.university} - ${cand.faculty}">${cand.university} (${cand.faculty})</span>
+                  </div>
+                </div>
+              </div>
+
+              ${rolesHtml}
+
+              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 mb-4">
+                <div class="flex items-baseline justify-between mb-1.5">
+                  <div class="flex items-baseline gap-1.5">
+                    <span class="text-2xl sm:text-3xl font-black text-tertiary tracking-tight">${cand.votes.toLocaleString('ar-EG')}</span>
+                    <span class="text-xs text-slate-500 font-medium">صوت</span>
+                  </div>
+                  <span class="text-sm font-extrabold text-primary">${pct}%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                  <div class="h-full rounded-full bg-gradient-to-l from-primary to-tertiary transition-all duration-500" style="width: ${pct}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
+                    class="w-full py-3 px-4 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-sm transition-all duration-200 shadow flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-[20px]">how_to_vote</span>
+              <span>${currentSession.status === 'active' ? 'تصويت للأمين العام / القائمة (+1)' : currentSession.status === 'closed' ? 'الجلسة مغلقة' : 'التصويت غير مفتوح'}</span>
+            </button>
+          `;
+
+          gridEl.appendChild(card);
+        });
+      }
+    }
+
+    // 2. SECTION: OVERSIGHT BOARD (DIRECT INDIVIDUAL VOTE)
     if (activeBodyFilter === 'all' || activeBodyFilter === 'oversight') {
       const oversightCandidates = candidates.filter(c => c.body === 'الهيئة الرقابية');
       const totalOversightVotes = currentSession.candidates
         .filter(c => c.body === 'الهيئة الرقابية')
         .reduce((sum, c) => sum + c.votes, 0);
 
-      // Winners logic for Oversight: Top 3 with highest votes, #1 is President
       let sortedOversight = [...currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية')].sort((a,b) => b.votes - a.votes);
       let winnerPresidentId = (isClosed && sortedOversight.length > 0 && sortedOversight[0].votes > 0) ? sortedOversight[0].id : null;
       let top3MemberIds = (isClosed && sortedOversight.length > 0) ? sortedOversight.slice(0, 3).filter(c => c.votes > 0).map(c => c.id) : [];
@@ -672,7 +803,7 @@
                 <h3 class="text-xl font-black text-tertiary">انتخابات الهيئة الرقابية</h3>
                 <span class="text-xs px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-950 font-bold border border-orange-200">${oversightCandidates.length} مرشحاً</span>
               </div>
-              <p class="text-xs text-slate-500 mt-0.5">يُنتخب الأعلى 3 أصوات كأعضاء في الهيئة الرقابية، والأعلى تصويتاً يُعين رئيساً للهيئة</p>
+              <p class="text-xs text-slate-500 mt-0.5">يُنتخب الأعلى 3 أصوات كأعضاء في الهيئة الرقابية، والأعلى تصويتاً (#1) يُعين رئيساً للهيئة</p>
             </div>
           </div>
           <div class="text-xs bg-slate-50 text-slate-600 px-3.5 py-1.5 rounded-xl border border-slate-200 font-medium self-start sm:self-auto">
@@ -754,228 +885,6 @@
         });
       }
     }
-
-    // 2. SECTION: EXECUTIVE BOARD - INDIVIDUAL POSITIONS
-    if (activeBodyFilter === 'all' || activeBodyFilter === 'exec_indiv') {
-      const execIndivCandidates = candidates.filter(c => c.body === 'الهيئة الإدارية' && c.nominationType === 'فردي');
-      const totalExecIndivVotes = currentSession.candidates
-        .filter(c => c.body === 'الهيئة الإدارية' && c.nominationType === 'فردي')
-        .reduce((sum, c) => sum + c.votes, 0);
-
-      const secEl = document.createElement('section');
-      secEl.className = 'space-y-4';
-      secEl.innerHTML = `
-        <div class="bg-white p-5 rounded-2xl border-r-4 border-r-primary border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-[#166380] text-white flex items-center justify-center shadow-md font-bold">
-              <span class="material-symbols-outlined text-[26px]">account_balance</span>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="text-xl font-black text-tertiary">الهيئة الإدارية - الترشح الفردي للمناصب</h3>
-                <span class="text-xs px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-950 font-bold border border-teal-200">${execIndivCandidates.length} مرشحاً</span>
-              </div>
-              <p class="text-xs text-slate-500 mt-0.5">التنافس الفردي على مناصب المكتب التنفيذي (الأمين العام، المالي، الأكاديمي، إلخ)</p>
-            </div>
-          </div>
-          <div class="text-xs bg-slate-50 text-slate-600 px-3.5 py-1.5 rounded-xl border border-slate-200 font-medium self-start sm:self-auto">
-            مجموع أصوات المناصب الفردية (<span class="font-bold text-primary">${totalExecIndivVotes.toLocaleString('ar-EG')}</span> صوت)
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="grid-exec-indiv"></div>
-      `;
-      mainContainer.appendChild(secEl);
-
-      const gridEl = secEl.querySelector('#grid-exec-indiv');
-      if (execIndivCandidates.length === 0) {
-        gridEl.innerHTML = `<div class="col-span-full p-8 text-center bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 text-sm">لا يوجد مرشحون فرديون في الهيئة الإدارية حتى الآن.</div>`;
-      } else {
-        execIndivCandidates.forEach(cand => {
-          // Calculate percentage within position
-          const samePositionVotes = currentSession.candidates
-            .filter(c => c.body === 'الهيئة الإدارية' && c.nominationType === 'فردي' && c.position === cand.position)
-            .reduce((sum, c) => sum + c.votes, 0);
-          const pct = samePositionVotes > 0 ? ((cand.votes / samePositionVotes) * 100).toFixed(1) : 0;
-
-          // Check position winner if closed
-          let samePosCandidates = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية' && c.nominationType === 'فردي' && c.position === cand.position);
-          let maxPosVotes = Math.max(...samePosCandidates.map(c => c.votes));
-          const isWinner = isClosed && maxPosVotes > 0 && cand.votes === maxPosVotes;
-
-          const sessionUserVotes = userVotedMap[currentSession.id] || [];
-          const hasVotedThis = sessionUserVotes.includes(cand.id);
-
-          const card = document.createElement('div');
-          card.id = `candidate-card-${cand.id}`;
-          card.className = `bg-white rounded-2xl border ${isWinner ? 'border-amber-400 ring-4 ring-amber-400/30' : hasVotedThis ? 'border-teal-400 ring-2 ring-teal-400/20' : 'border-border-subtle'} p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
-
-          card.innerHTML = `
-            <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-primary to-secondary"></div>
-
-            <div>
-              <div class="flex items-start justify-between gap-2 mb-3 pt-1">
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-950 border border-teal-200">
-                  <span class="material-symbols-outlined text-[14px] text-primary">badge</span>
-                  منصب: ${cand.position}
-                </span>
-                <div class="flex items-center gap-1 flex-wrap justify-end">
-                  ${isWinner ? `<span class="text-[10px] font-extrabold text-amber-950 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-0.5">🏆 مسؤول ${cand.position}</span>` : ''}
-                  ${hasVotedThis ? '<span class="text-[10px] font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">check</span> تم تصويتك</span>' : ''}
-                  <span class="text-xs text-slate-400 font-semibold bg-slate-100 px-2 py-0.5 rounded-md">#${cand.id}</span>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-3.5 mb-4">
-                <div class="w-12 h-12 rounded-2xl bg-teal-50 text-primary border border-teal-200 flex items-center justify-center font-black text-xl shadow-inner shrink-0">
-                  ${cand.name.charAt(0)}
-                </div>
-                <div class="min-w-0">
-                  <h4 class="font-extrabold text-base sm:text-lg text-slate-800 leading-snug truncate">${cand.name}</h4>
-                  <div class="flex items-center gap-1 text-xs text-slate-500 mt-1 truncate">
-                    <span class="material-symbols-outlined text-[15px] text-slate-400">school</span>
-                    <span class="truncate" title="${cand.university} - ${cand.faculty}">${cand.university} (${cand.faculty})</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 mb-4">
-                <div class="flex items-baseline justify-between mb-1.5">
-                  <div class="flex items-baseline gap-1.5">
-                    <span class="text-2xl sm:text-3xl font-black text-tertiary tracking-tight">${cand.votes.toLocaleString('ar-EG')}</span>
-                    <span class="text-xs text-slate-500 font-medium">صوت</span>
-                  </div>
-                  <span class="text-sm font-extrabold text-primary">${pct}%</span>
-                </div>
-                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-                  <div class="h-full rounded-full bg-gradient-to-l from-primary to-secondary transition-all duration-500" style="width: ${pct}%"></div>
-                </div>
-              </div>
-            </div>
-
-            <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
-                    class="w-full py-3 px-4 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-sm transition-all duration-200 shadow flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined text-[20px]">how_to_vote</span>
-              <span>${currentSession.status === 'active' ? 'تصويت لهذا المرشح (+1)' : currentSession.status === 'closed' ? 'الجلسة مغلقة' : 'التصويت غير مفتوح'}</span>
-            </button>
-          `;
-
-          gridEl.appendChild(card);
-        });
-      }
-    }
-
-    // 3. SECTION: EXECUTIVE BOARD - FULL TEAMS / SLATES
-    if (activeBodyFilter === 'all' || activeBodyFilter === 'exec_team') {
-      const execTeamCandidates = candidates.filter(c => c.body === 'الهيئة الإدارية' && c.nominationType === 'فريق');
-      const totalExecTeamVotes = currentSession.candidates
-        .filter(c => c.body === 'الهيئة الإدارية' && c.nominationType === 'فريق')
-        .reduce((sum, c) => sum + c.votes, 0);
-
-      let maxTeamVotes = Math.max(...execTeamCandidates.map(c => c.votes));
-
-      const secEl = document.createElement('section');
-      secEl.className = 'space-y-4';
-      secEl.innerHTML = `
-        <div class="bg-white p-5 rounded-2xl border-r-4 border-r-tertiary border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-tertiary to-[#0e7c86] text-white flex items-center justify-center shadow-md font-bold">
-              <span class="material-symbols-outlined text-[26px]">groups</span>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="text-xl font-black text-tertiary">الهيئة الإدارية - الترشح كفريق / قائمة كاملة</h3>
-                <span class="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 font-bold border border-slate-200">${execTeamCandidates.length} قائمة</span>
-              </div>
-              <p class="text-xs text-slate-500 mt-0.5">التصويت للقائمة الانتخابية الكاملة كحزمة واحدة لإدارة تجمع الطلبة السوريين</p>
-            </div>
-          </div>
-          <div class="text-xs bg-slate-50 text-slate-600 px-3.5 py-1.5 rounded-xl border border-slate-200 font-medium self-start sm:self-auto">
-            مجموع أصوات القوائم (<span class="font-bold text-tertiary">${totalExecTeamVotes.toLocaleString('ar-EG')}</span> صوت)
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="grid-exec-team"></div>
-      `;
-      mainContainer.appendChild(secEl);
-
-      const gridEl = secEl.querySelector('#grid-exec-team');
-      if (execTeamCandidates.length === 0) {
-        gridEl.innerHTML = `<div class="col-span-full p-8 text-center bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 text-sm">لا توجد قوائم انتخابية كاملة في الهيئة الإدارية حتى الآن.</div>`;
-      } else {
-        execTeamCandidates.forEach(cand => {
-          const pct = totalExecTeamVotes > 0 ? ((cand.votes / totalExecTeamVotes) * 100).toFixed(1) : 0;
-          const isWinner = isClosed && maxTeamVotes > 0 && cand.votes === maxTeamVotes;
-
-          const sessionUserVotes = userVotedMap[currentSession.id] || [];
-          const hasVotedThis = sessionUserVotes.includes(cand.id);
-
-          const card = document.createElement('div');
-          card.id = `candidate-card-${cand.id}`;
-          card.className = `bg-white rounded-2xl border ${isWinner ? 'border-amber-400 ring-4 ring-amber-400/30' : hasVotedThis ? 'border-teal-400 ring-2 ring-teal-400/20' : 'border-border-subtle'} p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
-
-          card.innerHTML = `
-            <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-tertiary to-primary"></div>
-
-            <div>
-              <div class="flex items-start justify-between gap-2 mb-3.5 pt-1">
-                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-tertiary border border-slate-200">
-                  <span class="material-symbols-outlined text-[15px] text-tertiary">groups</span>
-                  قائمة انتخابية متكاملة
-                </span>
-                <div class="flex items-center gap-1 flex-wrap justify-end">
-                  ${isWinner ? `<span class="text-[10px] font-extrabold text-amber-950 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-0.5">🏆 القائمة الفائزة بالإدارة</span>` : ''}
-                  ${hasVotedThis ? '<span class="text-[10px] font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">check</span> تم تصويتك</span>' : ''}
-                  <span class="text-xs text-slate-400 font-semibold bg-slate-100 px-2 py-0.5 rounded-md">#${cand.id}</span>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-4 mb-4">
-                <div class="w-14 h-14 rounded-2xl bg-tertiary/10 text-tertiary border border-tertiary/20 flex items-center justify-center font-black text-2xl shadow-inner shrink-0">
-                  👥
-                </div>
-                <div class="min-w-0">
-                  <h4 class="font-black text-lg text-slate-800 leading-snug truncate">${cand.name}</h4>
-                  <div class="flex items-center gap-1 text-xs text-slate-500 mt-1 truncate">
-                    <span class="material-symbols-outlined text-[15px] text-slate-400">school</span>
-                    <span class="truncate" title="${cand.university} - ${cand.faculty}">${cand.university} (${cand.faculty})</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Team members description box -->
-              ${cand.membersInfo ? `
-                <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 mb-4 text-xs text-slate-600 leading-relaxed">
-                  <span class="font-bold text-tertiary block mb-1">تشكيلة القائمة والمناصب:</span>
-                  ${cand.membersInfo}
-                </div>
-              ` : ''}
-
-              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 mb-4">
-                <div class="flex items-baseline justify-between mb-1.5">
-                  <div class="flex items-baseline gap-1.5">
-                    <span class="text-2xl sm:text-3xl font-black text-tertiary tracking-tight">${cand.votes.toLocaleString('ar-EG')}</span>
-                    <span class="text-xs text-slate-500 font-medium">صوت</span>
-                  </div>
-                  <span class="text-sm font-extrabold text-tertiary">${pct}%</span>
-                </div>
-                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
-                  <div class="h-full rounded-full bg-gradient-to-l from-tertiary to-primary transition-all duration-500" style="width: ${pct}%"></div>
-                </div>
-              </div>
-            </div>
-
-            <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
-                    class="w-full py-3 px-4 rounded-xl ${currentSession.status === 'active' ? 'bg-tertiary hover:bg-slate-900 active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-sm transition-all duration-200 shadow flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined text-[20px]">how_to_vote</span>
-              <span>${currentSession.status === 'active' ? 'تصويت لهذه القائمة (+1)' : currentSession.status === 'closed' ? 'الجلسة مغلقة' : 'التصويت غير مفتوح'}</span>
-            </button>
-          `;
-
-          gridEl.appendChild(card);
-        });
-      }
-    }
   }
 
   // CAST VOTE ACTION
@@ -1048,54 +957,27 @@
 
   // Dynamic Form Select Listeners
   const selectBody = document.getElementById('admin-select-body');
-  const nominationTypeBox = document.getElementById('admin-nomination-type-box');
-  const selectType = document.getElementById('admin-select-type');
-  const positionBox = document.getElementById('admin-position-box');
-  const selectPosition = document.getElementById('admin-select-position');
   const nameLabel = document.getElementById('admin-name-label');
   const candNameInput = document.getElementById('admin-cand-name');
-  const teamMembersBox = document.getElementById('admin-team-members-box');
+  const teamNameBox = document.getElementById('admin-team-name-box');
+  const teamRolesBox = document.getElementById('admin-team-roles-box');
 
   function updateAdminFormFields() {
     const bodyVal = selectBody.value;
-    
     if (bodyVal === 'الهيئة الإدارية') {
-      nominationTypeBox.classList.remove('hidden');
-      const typeVal = selectType.value;
-
-      if (typeVal === 'فريق') {
-        positionBox.classList.add('hidden');
-        nameLabel.innerHTML = 'اسم القائمة الانتخابية / الفريق <span class="text-accent-red">*</span>';
-        candNameInput.placeholder = 'مثال: قائمة النهضة الطلابي';
-        teamMembersBox.classList.remove('hidden');
-      } else {
-        positionBox.classList.remove('hidden');
-        nameLabel.innerHTML = 'اسم المرشح الكامل <span class="text-accent-red">*</span>';
-        candNameInput.placeholder = 'أدخل اسم المرشح الثلاثي';
-        teamMembersBox.classList.add('hidden');
-        
-        // Populate executive positions
-        selectPosition.innerHTML = '';
-        EXECUTIVE_POSITIONS.forEach(pos => {
-          const opt = document.createElement('option');
-          opt.value = pos;
-          opt.textContent = pos;
-          selectPosition.appendChild(opt);
-        });
-      }
-    } else { // الهيئة الرقابية
-      nominationTypeBox.classList.add('hidden');
-      positionBox.classList.remove('hidden');
-      nameLabel.innerHTML = 'اسم المرشح الكامل <span class="text-accent-red">*</span>';
-      candNameInput.placeholder = 'أدخل اسم المرشح الثلاثي';
-      teamMembersBox.classList.add('hidden');
-
-      selectPosition.innerHTML = '<option value="عضوية الهيئة الرقابية">عضوية الهيئة الرقابية</option>';
+      nameLabel.innerHTML = 'اسم مرشح الأمين العام <span class="text-accent-red">*</span>';
+      candNameInput.placeholder = 'أدخل الاسم الثلاثي لمرشح الأمين العام';
+      teamNameBox.classList.remove('hidden');
+      teamRolesBox.classList.remove('hidden');
+    } else {
+      nameLabel.innerHTML = 'اسم مرشح الهيئة الرقابية <span class="text-accent-red">*</span>';
+      candNameInput.placeholder = 'أدخل الاسم الثلاثي لمرشح الهيئة الرقابية';
+      teamNameBox.classList.add('hidden');
+      teamRolesBox.classList.add('hidden');
     }
   }
 
   selectBody.addEventListener('change', updateAdminFormFields);
-  selectType.addEventListener('change', updateAdminFormFields);
   updateAdminFormFields();
 
   function renderAdminPanelData() {
@@ -1141,7 +1023,8 @@
         row.innerHTML = `
           <div>
             <span class="font-bold text-slate-800">${cand.name}</span>
-            <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded mr-1">${cand.body} (${cand.position})</span>
+            ${cand.teamName ? `<span class="text-[10px] text-tertiary font-bold bg-slate-100 px-1.5 py-0.5 rounded mr-1">(${cand.teamName})</span>` : ''}
+            <span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded mr-1">${cand.body}</span>
             <div class="text-[11px] text-slate-400">${cand.university} - ${cand.faculty}</div>
           </div>
           <div class="flex items-center gap-2">
@@ -1156,7 +1039,7 @@
     }
   }
 
-  // CREATE SESSION FORM SUBMIT
+  // CREATE SESSION SUBMIT
   document.getElementById('create-session-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const title = document.getElementById('new-session-title').value.trim();
@@ -1184,29 +1067,35 @@
     }
 
     const bodyVal = selectBody.value;
-    const typeVal = bodyVal === 'الهيئة الإدارية' ? selectType.value : 'فردي';
-    const positionVal = bodyVal === 'الهيئة الإدارية' 
-      ? (typeVal === 'فريق' ? 'قائمة متكاملة' : selectPosition.value)
-      : 'عضوية الهيئة الرقابية';
-    
     const nameVal = candNameInput.value.trim();
+    const teamNameVal = document.getElementById('admin-team-name').value.trim();
     const uniVal = document.getElementById('admin-select-university').value;
     const facultyVal = document.getElementById('admin-cand-faculty').value.trim();
-    const membersVal = typeVal === 'فريق' ? document.getElementById('admin-team-members').value.trim() : '';
 
     if (!nameVal || !uniVal || !facultyVal) return;
+
+    let teamRoles = null;
+    if (bodyVal === 'الهيئة الإدارية') {
+      teamRoles = {
+        financial: document.getElementById('role-financial').value.trim(),
+        academic: document.getElementById('role-academic').value.trim(),
+        activities: document.getElementById('role-activities').value.trim(),
+        female: document.getElementById('role-female').value.trim(),
+        studentAffairs: document.getElementById('role-student-affairs').value.trim(),
+        media: document.getElementById('role-media').value.trim()
+      };
+    }
 
     const newId = currentSession.candidates.length > 0 ? Math.max(...currentSession.candidates.map(c => c.id)) + 1 : 1;
 
     currentSession.candidates.unshift({
       id: newId,
       body: bodyVal,
-      nominationType: typeVal,
-      position: positionVal,
       name: nameVal,
+      teamName: teamNameVal,
       university: uniVal,
       faculty: facultyVal,
-      membersInfo: membersVal,
+      teamRoles: teamRoles,
       votes: 0
     });
 
@@ -1214,16 +1103,22 @@
     renderAll();
 
     candNameInput.value = '';
+    document.getElementById('admin-team-name').value = '';
     document.getElementById('admin-cand-faculty').value = '';
-    document.getElementById('admin-team-members').value = '';
+    document.getElementById('role-financial').value = '';
+    document.getElementById('role-academic').value = '';
+    document.getElementById('role-activities').value = '';
+    document.getElementById('role-female').value = '';
+    document.getElementById('role-student-affairs').value = '';
+    document.getElementById('role-media').value = '';
     candNameInput.focus();
 
-    showToast(`تم إضافة "${nameVal}" بنجاح!`);
+    showToast(`تم إضافة المرشح "${nameVal}" بنجاح!`);
   });
 
   window.deleteCandidate = function(candId) {
     if (!currentSession) return;
-    if (confirm('هل ترغب في حذف هذا العنصر من الجلسة؟')) {
+    if (confirm('هل ترغب في حذف هذا المرشح من الجلسة؟')) {
       currentSession.candidates = currentSession.candidates.filter(c => c.id !== candId);
       saveCurrentSession();
       renderAll();
@@ -1290,18 +1185,13 @@
     updateFilterStyles(this);
     renderCandidateCards();
   });
+  document.getElementById('filter-tab-exec').addEventListener('click', function() {
+    activeBodyFilter = 'exec';
+    updateFilterStyles(this);
+    renderCandidateCards();
+  });
   document.getElementById('filter-tab-oversight').addEventListener('click', function() {
     activeBodyFilter = 'oversight';
-    updateFilterStyles(this);
-    renderCandidateCards();
-  });
-  document.getElementById('filter-tab-exec-indiv').addEventListener('click', function() {
-    activeBodyFilter = 'exec_indiv';
-    updateFilterStyles(this);
-    renderCandidateCards();
-  });
-  document.getElementById('filter-tab-exec-team').addEventListener('click', function() {
-    activeBodyFilter = 'exec_team';
     updateFilterStyles(this);
     renderCandidateCards();
   });
@@ -1315,7 +1205,7 @@
     activeBtn.classList.add('bg-primary', 'text-white', 'shadow');
   }
 
-  // ARCHIVE MODAL VIEWER
+  // ARCHIVE VIEWER
   function openArchiveModal() {
     const modal = document.getElementById('archive-modal');
     modal.classList.remove('hidden');
@@ -1345,24 +1235,26 @@
       const totalSessionVotes = sess.candidates.reduce((sum, c) => sum + c.votes, 0);
       const formattedDate = new Date(sess.date).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
+      // Executive General Secretary winner
+      let execSorted = [...sess.candidates.filter(c => c.body === 'الهيئة الإدارية')].sort((a,b) => b.votes - a.votes);
+      let execWinner = execSorted.length > 0 && execSorted[0].votes > 0 ? execSorted[0] : null;
+
       // Oversight winners: Top 3, #1 President
       let oversightSorted = [...sess.candidates.filter(c => c.body === 'الهيئة الرقابية')].sort((a,b) => b.votes - a.votes);
       let president = oversightSorted.length > 0 && oversightSorted[0].votes > 0 ? oversightSorted[0] : null;
       let members = oversightSorted.length > 1 ? oversightSorted.slice(1, 3).filter(c => c.votes > 0) : [];
 
       let winnersHtml = '';
+      if (execWinner) {
+        winnersHtml += `<div class="text-xs bg-teal-50 text-teal-950 border border-teal-200 p-2.5 rounded-xl font-bold">
+                          🏆 الأمين العام الفائز برئاسة الهيئة الإدارية: ${execWinner.name} ${execWinner.teamName ? '(' + execWinner.teamName + ')' : ''} (${execWinner.votes} صوت)
+                        </div>`;
+      }
+
       if (president) {
         winnersHtml += `<div class="text-xs bg-amber-50 text-amber-950 border border-amber-200 p-2.5 rounded-xl font-bold space-y-1">
                           <div>👑 رئيس الهيئة الرقابية: ${president.name} (${president.votes} صوت)</div>
                           ${members.length > 0 ? `<div>👥 أعضاء الهيئة الرقابية: ${members.map(m => m.name + ' (' + m.votes + ' صوت)').join(' • ')}</div>` : ''}
-                        </div>`;
-      }
-
-      // Executive Team winner
-      let execTeams = [...sess.candidates.filter(c => c.body === 'الهيئة الإدارية' && c.nominationType === 'فريق')].sort((a,b) => b.votes - a.votes);
-      if (execTeams.length > 0 && execTeams[0].votes > 0) {
-        winnersHtml += `<div class="text-xs bg-teal-50 text-teal-950 border border-teal-200 p-2.5 rounded-xl font-bold">
-                          🏆 القائمة الفائزة برئاسة الهيئة الإدارية: ${execTeams[0].name} (${execTeams[0].votes} صوت)
                         </div>`;
       }
 
@@ -1400,10 +1292,10 @@
 
     let csvContent = "\uFEFFعنوان الجلسة," + sess.title + "\n";
     csvContent += "التاريخ," + new Date(sess.date).toLocaleString('ar-EG') + "\n\n";
-    csvContent += "الرقم,اسم المرشح/القائمة,الهيئة,نوع الترشح,المنصب,الجامعة,الكلية والتخصص,عدد الأصوات\n";
+    csvContent += "الرقم,اسم المرشح,اسم القائمة,الهيئة,الجامعة,الكلية والتخصص,عدد الأصوات\n";
 
     sess.candidates.forEach(c => {
-      csvContent += `${c.id},"${c.name}","${c.body}","${c.nominationType}","${c.position}","${c.university}","${c.faculty}",${c.votes}\n`;
+      csvContent += `${c.id},"${c.name}","${c.teamName || '-'}","${c.body}","${c.university}","${c.faculty}",${c.votes}\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1430,10 +1322,10 @@
     }
 
     let csvContent = "\uFEFFعنوان الجلسة," + currentSession.title + "\n";
-    csvContent += "الرقم,اسم المرشح/القائمة,الهيئة,نوع الترشح,المنصب,الجامعة,الكلية والتخصص,عدد الأصوات\n";
+    csvContent += "الرقم,اسم المرشح,اسم القائمة,الهيئة,الجامعة,الكلية والتخصص,عدد الأصوات\n";
 
     currentSession.candidates.forEach(c => {
-      csvContent += `${c.id},"${c.name}","${c.body}","${c.nominationType}","${c.position}","${c.university}","${c.faculty}",${c.votes}\n`;
+      csvContent += `${c.id},"${c.name}","${c.teamName || '-'}","${c.body}","${c.university}","${c.faculty}",${c.votes}\n`;
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
