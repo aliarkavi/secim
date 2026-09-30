@@ -69,6 +69,24 @@
       background: #cbd5e1;
       border-radius: 4px;
     }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #official-results-modal, #official-results-modal * {
+        visibility: visible;
+      }
+      #official-results-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-[#f8f9fa] text-slate-800 antialiased min-h-screen flex flex-col justify-between">
@@ -90,6 +108,11 @@
 
     <!-- Header Actions & Navigation Buttons -->
     <div class="flex items-center gap-2 sm:gap-3">
+      <button id="show-results-header-btn" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white transition flex items-center gap-1.5 shadow-md hidden">
+        <span class="material-symbols-outlined text-[18px]">emoji_events</span>
+        <span>إظهار النتائج</span>
+      </button>
+
       <button id="open-archive-btn" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 border border-slate-200 shadow-sm">
         <span class="material-symbols-outlined text-[18px] text-tertiary">inventory_2</span>
         <span class="hidden sm:inline">أرشيف الجلسات</span>
@@ -129,6 +152,14 @@
         <p id="session-desc-text" class="text-white/85 text-sm sm:text-base max-w-2xl leading-relaxed">
           يرجى الدخول إلى <strong class="text-accent-yellow cursor-pointer hover:underline" onclick="openAdminModal()">لوحة الإدارة (Admin)</strong> لبدء الجلسة الانتخابية وإدخال بيانات المرشحين.
         </p>
+
+        <!-- Show Results Action Button in Banner -->
+        <div id="session-results-banner-btn-box" class="mt-4 hidden">
+          <button onclick="openOfficialResultsModal()" class="px-5 py-2.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-tertiary font-black rounded-xl text-sm shadow-lg flex items-center gap-2 transition active:scale-95">
+            <span class="material-symbols-outlined text-[20px]">emoji_events</span>
+            <span>إظهار النتائج الرسمية وإعلان الفائزين 🏆</span>
+          </button>
+        </div>
       </div>
 
       <!-- Metric Badges Breakdown -->
@@ -326,7 +357,7 @@
               </div>
             </div>
 
-            <!-- TEAM ROLES DISPLAY SETUP (For Executive Board Display Clarification) -->
+            <!-- TEAM ROLES DISPLAY SETUP -->
             <div id="admin-team-roles-box" class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
               <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                 <span class="text-xs font-bold text-tertiary flex items-center gap-1">
@@ -396,7 +427,7 @@
 
             <button id="admin-close-archive-btn" class="py-3 px-4 rounded-xl font-bold text-xs bg-slate-800 hover:bg-slate-900 text-white transition flex items-center justify-center gap-2 shadow">
               <span class="material-symbols-outlined text-[18px]">archive</span>
-              <span>إغلاق وتوثيق الجلسة وحفظها في الأرشيف</span>
+              <span>إغلاق الجلسة وإظهار النتائج الرسمية 🏆</span>
             </button>
           </div>
 
@@ -417,7 +448,124 @@
     </div>
   </div>
 
-  <!-- ================= MODAL 2: ARCHIVE VIEWER ================= -->
+  <!-- ================= MODAL 2: OFFICIAL RESULTS MODAL ================= -->
+  <div id="official-results-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="p-6 bg-gradient-to-r from-amber-500 via-primary to-tertiary text-white flex items-center justify-between no-print">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[32px]">emoji_events</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-black">النتائج الرسمية وإعلان الفائزين بالانتخابات</h3>
+            <p id="results-session-title-sub" class="text-xs text-white/90 font-medium mt-0.5">محضر نتائج الاقتراع وتوثيق الهيئات الانتخابية</p>
+          </div>
+        </div>
+        <button onclick="closeOfficialResultsModal()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition">
+          <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body / Official Results Content -->
+      <div class="p-6 sm:p-8 overflow-y-auto flex-1 space-y-6 bg-slate-50">
+        
+        <!-- Header Print Title -->
+        <div class="text-center border-b border-slate-200 pb-4">
+          <img src="logo.svg" alt="Logo" class="h-14 mx-auto mb-2"/>
+          <h2 class="text-2xl font-black text-tertiary">تجمع الطلبة السوريين في قونيا (SOTKonya)</h2>
+          <h4 id="print-session-title" class="text-base font-bold text-primary mt-1">التقرير الرسمي المعتمد لنتائج الانتخابات</h4>
+          <span id="print-session-date" class="text-xs text-slate-500 font-medium block mt-1"></span>
+        </div>
+
+        <!-- WINNERS SUMMARY CARDS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Executive Board Winner Card -->
+          <div class="bg-white rounded-2xl p-5 border-2 border-primary shadow-sm space-y-3 relative overflow-hidden">
+            <div class="absolute top-0 right-0 left-0 h-2 bg-primary"></div>
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-950 border border-teal-200">
+                🏛️ الهيئة الإدارية الفائزة
+              </span>
+              <span class="material-symbols-outlined text-amber-500 text-[26px]">emoji_events</span>
+            </div>
+            
+            <div id="results-exec-winner-box" class="space-y-2">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+
+          <!-- Oversight Board Winners Card -->
+          <div class="bg-white rounded-2xl p-5 border-2 border-accent-orange shadow-sm space-y-3 relative overflow-hidden">
+            <div class="absolute top-0 right-0 left-0 h-2 bg-accent-orange"></div>
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-xs font-bold px-3 py-1 rounded-full bg-orange-50 text-orange-950 border border-orange-200">
+                🏆 الهيئة الرقابية المنتخبة
+              </span>
+              <span class="material-symbols-outlined text-amber-500 text-[26px]">gavel</span>
+            </div>
+            
+            <div id="results-oversight-winners-box" class="space-y-2">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FULL DETAILED CANDIDATES TABLE -->
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+          <div class="p-4 bg-slate-100 font-bold text-xs text-tertiary border-b border-slate-200 flex items-center justify-between">
+            <span>الجدول التفصيلي لجميع المرشحين والأصوات المسجلة</span>
+            <span id="results-total-votes-badge" class="text-xs font-extrabold text-primary"></span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs text-slate-700">
+              <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3">#</th>
+                  <th class="p-3">اسم المرشح / القائمة</th>
+                  <th class="p-3">الهيئة</th>
+                  <th class="p-3">الجامعة والكلية</th>
+                  <th class="p-3 text-center">عدد الأصوات</th>
+                  <th class="p-3 text-center">النسبة</th>
+                  <th class="p-3 text-center">النتيجة</th>
+                </tr>
+              </thead>
+              <tbody id="results-table-body" class="divide-y divide-slate-100 font-medium">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Action Buttons (No Print) -->
+      <div class="p-4 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="px-4 py-2.5 bg-tertiary hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow">
+            <span class="material-symbols-outlined text-[18px]">print</span>
+            <span>طباعة النتائج / حفظ PDF</span>
+          </button>
+
+          <button onclick="downloadCurrentCSV()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow">
+            <span class="material-symbols-outlined text-[18px]">download</span>
+            <span>تنزيل التقرير (CSV)</span>
+          </button>
+        </div>
+
+        <button onclick="closeOfficialResultsModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition">
+          إغلاق النافذة
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL 3: ARCHIVE VIEWER ================= -->
   <div id="archive-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
       
@@ -505,13 +653,13 @@
 
 <!-- INTERACTIVE SCRIPT ENGINE -->
 <script>
-  // Storage Keys
-  const STORAGE_CURRENT_SESSION = 'sotkonya_session_v4';
-  const STORAGE_ARCHIVED_SESSIONS = 'sotkonya_archives_v4';
-  const STORAGE_USER_VOTED_MAP = 'sotkonya_voted_map_v4';
-  const STORAGE_ADMIN_PIN = 'sotkonya_admin_pin_v4';
+  // STABLE MASTER STORAGE KEYS
+  const MASTER_STORAGE_CURRENT_SESSION = 'sotkonya_master_current_session';
+  const MASTER_STORAGE_ARCHIVED_SESSIONS = 'sotkonya_master_archived_sessions';
+  const MASTER_STORAGE_USER_VOTED_MAP = 'sotkonya_master_user_voted_map';
+  const MASTER_STORAGE_ADMIN_PIN = 'sotkonya_master_admin_pin';
 
-  let adminPin = localStorage.getItem(STORAGE_ADMIN_PIN) || '1234';
+  let adminPin = localStorage.getItem(MASTER_STORAGE_ADMIN_PIN) || '1234';
   let isAdminVerified = false;
   let currentSession = loadCurrentSession();
   let archivedSessions = loadArchivedSessions();
@@ -521,7 +669,13 @@
 
   function loadCurrentSession() {
     try {
-      const saved = localStorage.getItem(STORAGE_CURRENT_SESSION);
+      // Primary Master Key
+      let saved = localStorage.getItem(MASTER_STORAGE_CURRENT_SESSION);
+      // Fallbacks to legacy keys if master key empty
+      if (!saved) saved = localStorage.getItem('sotkonya_session_v4');
+      if (!saved) saved = localStorage.getItem('sotkonya_session_v3');
+      if (!saved) saved = localStorage.getItem('sotkonya_current_session_v2');
+
       if (saved) return JSON.parse(saved);
     } catch(e) {}
     return null;
@@ -530,16 +684,19 @@
   function saveCurrentSession() {
     try {
       if (currentSession) {
-        localStorage.setItem(STORAGE_CURRENT_SESSION, JSON.stringify(currentSession));
+        localStorage.setItem(MASTER_STORAGE_CURRENT_SESSION, JSON.stringify(currentSession));
       } else {
-        localStorage.removeItem(STORAGE_CURRENT_SESSION);
+        localStorage.removeItem(MASTER_STORAGE_CURRENT_SESSION);
       }
     } catch(e) {}
   }
 
   function loadArchivedSessions() {
     try {
-      const saved = localStorage.getItem(STORAGE_ARCHIVED_SESSIONS);
+      let saved = localStorage.getItem(MASTER_STORAGE_ARCHIVED_SESSIONS);
+      if (!saved) saved = localStorage.getItem('sotkonya_archives_v4');
+      if (!saved) saved = localStorage.getItem('sotkonya_archives_v3');
+
       if (saved) return JSON.parse(saved);
     } catch(e) {}
     return [];
@@ -547,13 +704,15 @@
 
   function saveArchivedSessions() {
     try {
-      localStorage.setItem(STORAGE_ARCHIVED_SESSIONS, JSON.stringify(archivedSessions));
+      localStorage.setItem(MASTER_STORAGE_ARCHIVED_SESSIONS, JSON.stringify(archivedSessions));
     } catch(e) {}
   }
 
   function loadUserVotedMap() {
     try {
-      const saved = localStorage.getItem(STORAGE_USER_VOTED_MAP);
+      let saved = localStorage.getItem(MASTER_STORAGE_USER_VOTED_MAP);
+      if (!saved) saved = localStorage.getItem('sotkonya_voted_map_v4');
+
       if (saved) return JSON.parse(saved);
     } catch(e) {}
     return {};
@@ -561,12 +720,12 @@
 
   function saveUserVotedMap() {
     try {
-      localStorage.setItem(STORAGE_USER_VOTED_MAP, JSON.stringify(userVotedMap));
+      localStorage.setItem(MASTER_STORAGE_USER_VOTED_MAP, JSON.stringify(userVotedMap));
     } catch(e) {}
   }
 
   window.addEventListener('storage', function(e) {
-    if (e.key === STORAGE_CURRENT_SESSION) {
+    if (e.key === MASTER_STORAGE_CURRENT_SESSION) {
       currentSession = loadCurrentSession();
       renderAll();
     }
@@ -587,6 +746,9 @@
     const emptyView = document.getElementById('empty-state-view');
     const controlsBar = document.getElementById('controls-bar');
 
+    const showResultsHeaderBtn = document.getElementById('show-results-header-btn');
+    const resultsBannerBtnBox = document.getElementById('session-results-banner-btn-box');
+
     if (!currentSession) {
       statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/30 text-white text-xs font-bold border border-white/20";
       statusBadge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-400"></span> لا توجد جلسة نشطة`;
@@ -600,6 +762,8 @@
 
       emptyView.classList.remove('hidden');
       controlsBar.classList.add('hidden');
+      showResultsHeaderBtn.classList.add('hidden');
+      resultsBannerBtnBox.classList.add('hidden');
       return;
     }
 
@@ -620,14 +784,20 @@
       statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/30 text-amber-100 text-xs font-bold border border-white/20";
       statusBadge.innerHTML = `<span class="material-symbols-outlined text-[15px]">edit_note</span> الجلسة قيد الإعداد (مسودة)`;
       descText.textContent = "تم إنشاء الجلسة. يمكنك إضافة وتعديل المرشحين وتشكيلات الفرق من لوحة الإدارة ثم فتح التصويت للعامة.";
+      showResultsHeaderBtn.classList.add('hidden');
+      resultsBannerBtnBox.classList.add('hidden');
     } else if (currentSession.status === 'active') {
       statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/30 text-emerald-100 text-xs font-bold border border-white/20";
       statusBadge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span> التصويت المباشر نشط ومفتوح`;
       descText.textContent = "التصويت مباشر للهيئة الإدارية (مرشحي منصب الأمين العام) وللهيئة الرقابية. اختر مرشحك واضغط تصويت!";
+      showResultsHeaderBtn.classList.add('hidden');
+      resultsBannerBtnBox.classList.add('hidden');
     } else {
       statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-700/50 text-slate-200 text-xs font-bold border border-white/20";
       statusBadge.innerHTML = `<span class="material-symbols-outlined text-[15px]">lock</span> الجلسة مغلقة ومؤرشفة نهائياً`;
       descText.textContent = "تم إغلاق التصويت وتوثيق الفائزين برئاسة الهيئة الإدارية وأعضاء الهيئة الرقابية وحفظها في الأرشيف.";
+      showResultsHeaderBtn.classList.remove('hidden');
+      resultsBannerBtnBox.classList.remove('hidden');
     }
   }
 
@@ -651,7 +821,7 @@
 
     const isClosed = currentSession.status === 'closed';
 
-    // 1. SECTION: EXECUTIVE BOARD (EXECUTIVE ADMINISTRATIVE BOARD - GENERAL SECRETARY VOTE)
+    // 1. SECTION: EXECUTIVE BOARD
     if (activeBodyFilter === 'all' || activeBodyFilter === 'exec') {
       const execCandidates = candidates.filter(c => c.body === 'الهيئة الإدارية');
       const totalExecVotes = currentSession.candidates
@@ -700,7 +870,6 @@
           card.id = `candidate-card-${cand.id}`;
           card.className = `bg-white rounded-2xl border ${isWinner ? 'border-amber-400 ring-4 ring-amber-400/30' : hasVotedThis ? 'border-teal-400 ring-2 ring-teal-400/20' : 'border-border-subtle'} p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
 
-          // Format team roles if present
           let rolesHtml = '';
           if (cand.teamRoles && Object.keys(cand.teamRoles).some(k => cand.teamRoles[k])) {
             rolesHtml = `
@@ -779,7 +948,7 @@
       }
     }
 
-    // 2. SECTION: OVERSIGHT BOARD (DIRECT INDIVIDUAL VOTE)
+    // 2. SECTION: OVERSIGHT BOARD
     if (activeBodyFilter === 'all' || activeBodyFilter === 'oversight') {
       const oversightCandidates = candidates.filter(c => c.body === 'الهيئة الرقابية');
       const totalOversightVotes = currentSession.candidates
@@ -1145,17 +1314,27 @@
     renderAll();
   });
 
+  // CLOSE SESSION & SHOW OFFICIAL RESULTS
   document.getElementById('admin-close-archive-btn').addEventListener('click', function() {
     if (!currentSession) return;
 
-    if (confirm('هل أنت متأكد من إغلاق وتوثيق نتائج هذه الجلسة ونقلها للأرشيف؟ لن يمكن التعديل بعد ذلك.')) {
+    if (confirm('هل أنت متأكد من إغلاق وتوثيق هذه الجلسة وإعلان النتائج الرسمية؟ لن يمكن التعديل بعد ذلك.')) {
       currentSession.status = 'closed';
-      archivedSessions.unshift(JSON.parse(JSON.stringify(currentSession)));
+      
+      // Save archived session
+      const archiveCopy = JSON.parse(JSON.stringify(currentSession));
+      archivedSessions = archivedSessions.filter(s => s.id !== currentSession.id);
+      archivedSessions.unshift(archiveCopy);
+      
       saveArchivedSessions();
       saveCurrentSession();
 
       renderAll();
-      showToast('تم إغلاق الجلسة وتوثيق نتائج الهيئات في الأرشيف بنجاح!');
+      closeAdminModal();
+      showToast('تم إغلاق الجلسة وتوثيق نتائج الهيئات بنجاح!');
+      
+      // Open Official Results Modal
+      openOfficialResultsModal();
     }
   });
 
@@ -1172,12 +1351,152 @@
     const newPin = prompt('أدخل رمز PIN الإداري الجديد:');
     if (newPin && newPin.trim().length >= 4) {
       adminPin = newPin.trim();
-      localStorage.setItem(STORAGE_ADMIN_PIN, adminPin);
+      localStorage.setItem(MASTER_STORAGE_ADMIN_PIN, adminPin);
       showToast('تم تغيير رمز PIN الإداري بنجاح.');
     } else if (newPin) {
       showToast('يجب أن يتكون رمز PIN من 4 أرقام على الأقل.');
     }
   });
+
+  // OFFICIAL RESULTS MODAL LOGIC
+  function openOfficialResultsModal() {
+    if (!currentSession) return;
+
+    const modal = document.getElementById('official-results-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    document.getElementById('results-session-title-sub').textContent = currentSession.title;
+    document.getElementById('print-session-title').textContent = currentSession.title;
+    document.getElementById('print-session-date').textContent = "تاريخ التوثيق والإغلاق: " + new Date(currentSession.date).toLocaleString('ar-EG');
+
+    const totalVotes = currentSession.candidates.reduce((sum, c) => sum + c.votes, 0);
+    document.getElementById('results-total-votes-badge').textContent = `إجمالي أصوات الجلسة: ${totalVotes.toLocaleString('ar-EG')} صوت`;
+
+    // 1. Executive Board Winner
+    const execBox = document.getElementById('results-exec-winner-box');
+    let execSorted = [...currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية')].sort((a,b) => b.votes - a.votes);
+    let execTotalVotes = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية').reduce((sum, c) => sum + c.votes, 0);
+
+    if (execSorted.length > 0 && execSorted[0].votes > 0) {
+      const winner = execSorted[0];
+      const pct = execTotalVotes > 0 ? ((winner.votes / execTotalVotes) * 100).toFixed(1) : 0;
+
+      execBox.innerHTML = `
+        <div class="bg-teal-50/70 p-3.5 rounded-xl border border-teal-200">
+          <div class="font-black text-lg text-tertiary">${winner.name}</div>
+          ${winner.teamName ? `<div class="text-xs font-extrabold text-primary">قائمة: ${winner.teamName}</div>` : ''}
+          <div class="text-xs text-slate-500 mt-1">${winner.university} (${winner.faculty})</div>
+          <div class="mt-2.5 pt-2 border-t border-teal-200/60 flex items-center justify-between text-xs font-extrabold text-primary">
+            <span>عدد الأصوات: ${winner.votes.toLocaleString('ar-EG')} صوت</span>
+            <span>النسبة: ${pct}%</span>
+          </div>
+        </div>
+      `;
+    } else {
+      execBox.innerHTML = `<div class="p-3 text-xs text-slate-400 bg-slate-100 rounded-xl">لم يتم تسجيل أصوات في الهيئة الإدارية.</div>`;
+    }
+
+    // 2. Oversight Board Winners
+    const oversightBox = document.getElementById('results-oversight-winners-box');
+    let oversightSorted = [...currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية')].sort((a,b) => b.votes - a.votes);
+    let oversightTotalVotes = currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية').reduce((sum, c) => sum + c.votes, 0);
+
+    if (oversightSorted.length > 0 && oversightSorted[0].votes > 0) {
+      const pres = oversightSorted[0];
+      const presPct = oversightTotalVotes > 0 ? ((pres.votes / oversightTotalVotes) * 100).toFixed(1) : 0;
+      const members = oversightSorted.slice(1, 3).filter(c => c.votes > 0);
+
+      let membersHtml = members.map((m, idx) => {
+        const mPct = oversightTotalVotes > 0 ? ((m.votes / oversightTotalVotes) * 100).toFixed(1) : 0;
+        return `<div class="text-xs font-bold text-slate-800 bg-slate-100 p-2 rounded-lg flex justify-between">
+                  <span>🏆 عضو الهيئة (${idx + 2}): ${m.name}</span>
+                  <span>${m.votes} صوت (${mPct}%)</span>
+                </div>`;
+      }).join('');
+
+      oversightBox.innerHTML = `
+        <div class="bg-amber-50/80 p-3.5 rounded-xl border border-amber-300 space-y-2">
+          <div>
+            <span class="text-[10px] font-extrabold bg-amber-200 text-amber-950 px-2 py-0.5 rounded-md">👑 رئيس الهيئة الرقابية</span>
+            <div class="font-black text-base text-tertiary mt-1">${pres.name}</div>
+            <div class="text-xs text-slate-500">${pres.university} (${pres.faculty})</div>
+            <div class="text-xs font-extrabold text-accent-orange mt-1">الأصوات: ${pres.votes.toLocaleString('ar-EG')} صوت (${presPct}%)</div>
+          </div>
+          ${members.length > 0 ? `<div class="pt-2 border-t border-amber-200 space-y-1">${membersHtml}</div>` : ''}
+        </div>
+      `;
+    } else {
+      oversightBox.innerHTML = `<div class="p-3 text-xs text-slate-400 bg-slate-100 rounded-xl">لم يتم تسجيل أصوات في الهيئة الرقابية.</div>`;
+    }
+
+    // 3. Full Detailed Candidates Table
+    const tableBody = document.getElementById('results-table-body');
+    tableBody.innerHTML = '';
+
+    let sortedAllCandidates = [...currentSession.candidates].sort((a,b) => b.votes - a.votes);
+
+    sortedAllCandidates.forEach((cand, idx) => {
+      const bodyTotalVotes = currentSession.candidates
+        .filter(c => c.body === cand.body)
+        .reduce((sum, c) => sum + c.votes, 0);
+      const pct = bodyTotalVotes > 0 ? ((cand.votes / bodyTotalVotes) * 100).toFixed(1) : 0;
+
+      let resultTag = '<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">-</span>';
+
+      if (cand.body === 'الهيئة الإدارية' && execSorted.length > 0 && cand.id === execSorted[0].id && cand.votes > 0) {
+        resultTag = '<span class="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full border border-emerald-300">🏆 فائز برئاسة الإدارة</span>';
+      } else if (cand.body === 'الهيئة الرقابية' && oversightSorted.length > 0 && cand.id === oversightSorted[0].id && cand.votes > 0) {
+        resultTag = '<span class="text-[10px] font-extrabold bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full border border-amber-300">👑 رئيس الهيئة الرقابية</span>';
+      } else if (cand.body === 'الهيئة الرقابية' && oversightSorted.slice(1,3).some(m => m.id === cand.id) && cand.votes > 0) {
+        resultTag = '<span class="text-[10px] font-bold bg-teal-100 text-teal-900 px-2.5 py-0.5 rounded-full border border-teal-300">🏆 عضو الهيئة الرقابية</span>';
+      }
+
+      const row = document.createElement('tr');
+      row.className = idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50';
+      row.innerHTML = `
+        <td class="p-3 font-bold text-slate-400">#${idx + 1}</td>
+        <td class="p-3 font-bold text-slate-800">
+          ${cand.name}
+          ${cand.teamName ? `<div class="text-[10px] text-tertiary font-normal">قائمة: ${cand.teamName}</div>` : ''}
+        </td>
+        <td class="p-3 text-slate-600 font-semibold">${cand.body}</td>
+        <td class="p-3 text-slate-500">${cand.university} (${cand.faculty})</td>
+        <td class="p-3 text-center font-black text-tertiary">${cand.votes.toLocaleString('ar-EG')}</td>
+        <td class="p-3 text-center font-bold text-primary">${pct}%</td>
+        <td class="p-3 text-center">${resultTag}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+
+  function closeOfficialResultsModal() {
+    const modal = document.getElementById('official-results-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  window.downloadCurrentCSV = function() {
+    if (!currentSession || currentSession.candidates.length === 0) return;
+
+    let csvContent = "\uFEFFعنوان الجلسة," + currentSession.title + "\n";
+    csvContent += "التاريخ," + new Date(currentSession.date).toLocaleString('ar-EG') + "\n\n";
+    csvContent += "الرقم,اسم المرشح,اسم القائمة,الهيئة,الجامعة,الكلية والتخصص,عدد الأصوات\n";
+
+    currentSession.candidates.forEach(c => {
+      csvContent += `${c.id},"${c.name}","${c.teamName || '-'}","${c.body}","${c.university}","${c.faculty}",${c.votes}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `تقرير_نتائج_${currentSession.title.replace(/\s+/g, '_')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('تم تصدير التقرير الرسمي بنجاح!');
+  };
 
   // FILTER TABS LISTENERS
   document.getElementById('filter-tab-all').addEventListener('click', function() {
@@ -1315,29 +1634,7 @@
     renderCandidateCards();
   });
 
-  document.getElementById('export-report-btn').addEventListener('click', function() {
-    if (!currentSession || currentSession.candidates.length === 0) {
-      showToast('لا توجد بيانات للتصدير في الجلسة الحالية!');
-      return;
-    }
-
-    let csvContent = "\uFEFFعنوان الجلسة," + currentSession.title + "\n";
-    csvContent += "الرقم,اسم المرشح,اسم القائمة,الهيئة,الجامعة,الكلية والتخصص,عدد الأصوات\n";
-
-    currentSession.candidates.forEach(c => {
-      csvContent += `${c.id},"${c.name}","${c.teamName || '-'}","${c.body}","${c.university}","${c.faculty}",${c.votes}\n`;
-    });
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `تقرير_انتخابات_${currentSession.title.replace(/\s+/g, '_')}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast('تم تصدير التقرير الحالي بنجاح!');
-  });
+  document.getElementById('export-report-btn').addEventListener('click', downloadCurrentCSV);
 
   document.getElementById('sort-votes-btn').addEventListener('click', function() {
     if (!currentSession) return;
