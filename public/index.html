@@ -576,7 +576,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold">أرشيف الجلسات الانتخابية السابقة</h3>
-            <p class="text-xs text-white/80">عرض توثيق نتائج الجلسات ورؤساء وأعضاء الهيئات الفائزة</p>
+            <p class="text-xs text-white/80">عرض توثيق نتائج الجلسات وإمكانيّة الحذف والتعديل</p>
           </div>
         </div>
         <button onclick="closeArchiveModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
@@ -669,9 +669,7 @@
 
   function loadCurrentSession() {
     try {
-      // Primary Master Key
       let saved = localStorage.getItem(MASTER_STORAGE_CURRENT_SESSION);
-      // Fallbacks to legacy keys if master key empty
       if (!saved) saved = localStorage.getItem('sotkonya_session_v4');
       if (!saved) saved = localStorage.getItem('sotkonya_session_v3');
       if (!saved) saved = localStorage.getItem('sotkonya_current_session_v2');
@@ -866,10 +864,6 @@
           const sessionUserVotes = userVotedMap[currentSession.id] || [];
           const hasVotedThis = sessionUserVotes.includes(cand.id);
 
-          const card = document.createElement('div');
-          card.id = `candidate-card-${cand.id}`;
-          card.className = `bg-white rounded-2xl border ${isWinner ? 'border-amber-400 ring-4 ring-amber-400/30' : hasVotedThis ? 'border-teal-400 ring-2 ring-teal-400/20' : 'border-border-subtle'} p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
-
           let rolesHtml = '';
           if (cand.teamRoles && Object.keys(cand.teamRoles).some(k => cand.teamRoles[k])) {
             rolesHtml = `
@@ -889,6 +883,10 @@
               </div>
             `;
           }
+
+          const card = document.createElement('div');
+          card.id = `candidate-card-${cand.id}`;
+          card.className = `bg-white rounded-2xl border ${isWinner ? 'border-amber-400 ring-4 ring-amber-400/30' : hasVotedThis ? 'border-teal-400 ring-2 ring-teal-400/20' : 'border-border-subtle'} p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
 
           card.innerHTML = `
             <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r from-primary to-tertiary"></div>
@@ -936,11 +934,20 @@
               </div>
             </div>
 
-            <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
-                    class="w-full py-3 px-4 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-sm transition-all duration-200 shadow flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined text-[20px]">how_to_vote</span>
-              <span>${currentSession.status === 'active' ? 'تصويت للأمين العام / القائمة (+1)' : currentSession.status === 'closed' ? 'الجلسة مغلقة' : 'التصويت غير مفتوح'}</span>
-            </button>
+            <!-- DUAL VOTE ACTIONS: CAST VOTE (+1) AND REMOVE VOTE (-1) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
+                      class="sm:col-span-2 py-3 px-3 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-xs transition shadow flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+                <span>تصويت (+1)</span>
+              </button>
+
+              <button onclick="removeVote(${cand.id})" ${currentSession.status !== 'active' || cand.votes <= 0 ? 'disabled' : ''}
+                      class="py-3 px-2 rounded-xl ${currentSession.status === 'active' && cand.votes > 0 ? 'bg-red-50 hover:bg-red-100 text-accent-red border border-red-200 active:scale-95' : 'bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200'} font-bold text-xs transition flex items-center justify-center gap-1" title="تراجع وإزالة صوت">
+                <span class="material-symbols-outlined text-[16px]">remove_circle_outline</span>
+                <span>تراجع (-1)</span>
+              </button>
+            </div>
           `;
 
           gridEl.appendChild(card);
@@ -1043,11 +1050,20 @@
               </div>
             </div>
 
-            <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
-                    class="w-full py-3 px-4 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-sm transition-all duration-200 shadow flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined text-[20px]">how_to_vote</span>
-              <span>${currentSession.status === 'active' ? 'تصويت لهذا المرشح (+1)' : currentSession.status === 'closed' ? 'الجلسة مغلقة' : 'التصويت غير مفتوح'}</span>
-            </button>
+            <!-- DUAL VOTE ACTIONS: CAST VOTE (+1) AND REMOVE VOTE (-1) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
+                      class="sm:col-span-2 py-3 px-3 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-xs transition shadow flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+                <span>تصويت (+1)</span>
+              </button>
+
+              <button onclick="removeVote(${cand.id})" ${currentSession.status !== 'active' || cand.votes <= 0 ? 'disabled' : ''}
+                      class="py-3 px-2 rounded-xl ${currentSession.status === 'active' && cand.votes > 0 ? 'bg-red-50 hover:bg-red-100 text-accent-red border border-red-200 active:scale-95' : 'bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200'} font-bold text-xs transition flex items-center justify-center gap-1" title="تراجع وإزالة صوت">
+                <span class="material-symbols-outlined text-[16px]">remove_circle_outline</span>
+                <span>تراجع (-1)</span>
+              </button>
+            </div>
           `;
 
           gridEl.appendChild(card);
@@ -1056,7 +1072,7 @@
     }
   }
 
-  // CAST VOTE ACTION
+  // CAST VOTE ACTION (+1)
   window.castVote = function(candidateId) {
     if (!currentSession || currentSession.status !== 'active') {
       showToast('التصويت غير مفتوح حالياً في هذه الجلسة!');
@@ -1084,6 +1100,41 @@
     }
 
     showToast(`تم تسجيل صوت لـ "${candidate.name}" بنجاح!`);
+  };
+
+  // REMOVE VOTE ACTION (-1)
+  window.removeVote = function(candidateId) {
+    if (!currentSession || currentSession.status !== 'active') {
+      showToast('التصويت غير مفتوح حالياً!');
+      return;
+    }
+
+    const candidate = currentSession.candidates.find(c => c.id === candidateId);
+    if (!candidate || candidate.votes <= 0) {
+      showToast('لا توجد أصوات لإزالتها لهذا المرشح!');
+      return;
+    }
+
+    candidate.votes -= 1;
+    saveCurrentSession();
+
+    if (userVotedMap[currentSession.id]) {
+      const idx = userVotedMap[currentSession.id].indexOf(candidateId);
+      if (idx !== -1) {
+        userVotedMap[currentSession.id].splice(idx, 1);
+        saveUserVotedMap();
+      }
+    }
+
+    renderAll();
+
+    const card = document.getElementById(`candidate-card-${candidateId}`);
+    if (card) {
+      card.classList.add('vote-pulse');
+      setTimeout(() => card.classList.remove('vote-pulse'), 400);
+    }
+
+    showToast(`تم التراجع وإزالة صوت من المرشح: "${candidate.name}"`);
   };
 
   // ADMIN MODAL & CONTROLS
@@ -1524,7 +1575,7 @@
     activeBtn.classList.add('bg-primary', 'text-white', 'shadow');
   }
 
-  // ARCHIVE VIEWER
+  // ARCHIVE VIEWER & DELETION
   function openArchiveModal() {
     const modal = document.getElementById('archive-modal');
     modal.classList.remove('hidden');
@@ -1593,7 +1644,12 @@
           ${winnersHtml || '<span class="text-xs text-slate-400">لم يتم توثيق أصوات في هذه الجلسة.</span>'}
         </div>
 
-        <div class="pt-2 flex justify-end">
+        <div class="pt-2 flex items-center justify-between gap-2 flex-wrap">
+          <button onclick="deleteArchivedSession('${sess.id}')" class="px-3 py-1.5 bg-red-50 border border-red-200 hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl transition flex items-center gap-1" title="حذف الجلسة المؤرشفة نهائياً">
+            <span class="material-symbols-outlined text-[16px]">delete</span>
+            <span>حذف الجلسة</span>
+          </button>
+
           <button onclick="downloadArchiveCSV('${sess.id}')" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-emerald-500 hover:text-emerald-600 text-slate-700 font-bold text-xs rounded-xl transition flex items-center gap-1">
             <span class="material-symbols-outlined text-[16px]">download</span>
             <span>تنزيل التقرير الرسمي (CSV)</span>
@@ -1604,6 +1660,16 @@
       container.appendChild(card);
     });
   }
+
+  // DELETE ARCHIVED SESSION ACTION
+  window.deleteArchivedSession = function(sessionId) {
+    if (confirm('هل أنت متأكد من حذف هذه الجلسة المؤرشفة نهائياً من الأرشيف؟')) {
+      archivedSessions = archivedSessions.filter(s => s.id !== sessionId);
+      saveArchivedSessions();
+      renderArchiveList();
+      showToast('تم حذف الجلسة المؤرشفة بنجاح.');
+    }
+  };
 
   window.downloadArchiveCSV = function(sessionId) {
     const sess = archivedSessions.find(s => s.id === sessionId);
