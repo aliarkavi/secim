@@ -4,7 +4,7 @@
   "description": "منظومة تسجيل وتصويت المرشحين - تجمع الطلبة السوريين في قونيا SOTKonya",
   "main": "index.html",
   "scripts": {
-    "build": "mkdir -p public && cp index.html public/"
+    "build": "mkdir -p public && cp index.html public/ && cp logo.svg public/"
   },
   "keywords": [
     "voting",
