@@ -1,51 +1,9 @@
 // Vercel Serverless Function: /api/candidates
-// Retrieves candidate list and current vote counts
+// Handles candidate endpoints with clean initial state
 
-let inMemoryCandidates = [
-  {
-    id: 1,
-    category: "الأمين العام",
-    name: "م. أنس العبدالله",
-    university: "جامعة سلجوق - كلية الهندسة المعمارية والتصميم",
-    votes: 184,
-    colorClass: "from-[#ea7a24] to-[#d93829]"
-  },
-  {
-    id: 2,
-    category: "الأمين العام",
-    name: "مرح الخالد",
-    university: "جامعة نجم الدين أربكان - كلية الطب البشري",
-    votes: 156,
-    colorClass: "from-[#f5a623] to-[#ea7a24]"
-  },
-  {
-    id: 3,
-    category: "الهيئة الرقابية",
-    name: "عمر النجار",
-    university: "جامعة قونيا التقنية - هندسة مدنية",
-    votes: 112,
-    colorClass: "from-[#0e7c86] to-[#1b9aaa]"
-  },
-  {
-    id: 4,
-    category: "الهيئة الرقابية",
-    name: "ريم القدور",
-    university: "جامعة كاراتاي - كلية إدارة الأعمال",
-    votes: 94,
-    colorClass: "from-[#1a2f4c] to-[#0e7c86]"
-  },
-  {
-    id: 5,
-    category: "الهيئة الرقابية",
-    name: "طارق الحلبي",
-    university: "جامعة سلجوق - كلية الحقوق والعلوم السياسية",
-    votes: 78,
-    colorClass: "from-[#0e7c86] to-[#166380]"
-  }
-];
+let inMemoryCandidates = [];
 
 export default function handler(req, res) {
-  // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
@@ -66,17 +24,13 @@ export default function handler(req, res) {
     }
 
     const newId = inMemoryCandidates.length > 0 ? Math.max(...inMemoryCandidates.map(c => c.id)) + 1 : 1;
-    const assignedColor = category === "الأمين العام" 
-      ? "from-[#ea7a24] to-[#d93829]" 
-      : "from-[#0e7c86] to-[#1b9aaa]";
 
     const newCandidate = {
       id: newId,
       category,
       name,
       university,
-      votes: 0,
-      colorClass: assignedColor
+      votes: 0
     };
 
     inMemoryCandidates.unshift(newCandidate);
