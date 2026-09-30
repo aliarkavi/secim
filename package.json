@@ -1,0 +1,20 @@
+{
+  "name": "sotkonya-voting-platform",
+  "version": "1.0.0",
+  "description": "منظومة تسجيل وتصويت المرشحين - تجمع الطلبة السوريين في قونيا SOTKonya",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "dev": "serve .",
+    "build": "echo 'Static build ready'"
+  },
+  "keywords": [
+    "voting",
+    "sotkonya",
+    "konya",
+    "elections",
+    "vercel"
+  ],
+  "author": "SOTKonya",
+  "license": "MIT"
+}

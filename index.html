@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  
+  <!-- Primary Meta Tags -->
+  <title>منظومة تسجيل وتصويت المرشحين | تجمع الطلبة السوريين في قونيا (SOTKonya)</title>
+  <meta name="title" content="منظومة تسجيل وتصويت المرشحين | تجمع الطلبة السوريين في قونيا (SOTKonya)"/>
+  <meta name="description" content="منصة الاقتراع الإلكتروني والترشح المباشر لانتخابات تجمع الطلبة السوريين في قونيا. تصويت شفاف وتحديث لحظي لنتائج الأمانة العامة والهيئة الرقابية."/>
+  <meta name="keywords" content="تجمع الطلبة السوريين, قونيا, تصويت, انتخابات, SOTKonya, Konya, الأمين العام, الهيئة الرقابية"/>
+  <meta name="author" content="تجمع الطلبة السوريين في قونيا - SOTKonya"/>
+  <meta name="theme-color" content="#0e7c86"/>
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="منظومة الانتخابات والترشح | تجمع الطلبة السوريين في قونيا"/>
+  <meta property="og:description" content="شاركونا في صنع القرار الانتخابي. تصويت مباشر وشفاف لانتخابات الأمانة العامة والهيئة الرقابية."/>
+  <meta property="og:locale" content="ar_SA"/>
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image"/>
+  <meta property="twitter:title" content="منظومة الانتخابات | تجمع الطلبة السوريين في قونيا"/>
+  <meta property="twitter:description" content="تصويت مباشر وتحديث لحظي لأصوات مرشحي الأمانة العامة والهيئة الرقابية."/>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0e7c86",
+            "primary-dark": "#00626a",
+            "primary-container": "#0e7c86",
+            secondary: "#f26430",
+            "secondary-dark": "#d84e1b",
+            tertiary: "#1a2f4c",
+            "accent-orange": "#ea7a24",
+            "accent-red": "#d93829",
+            "accent-yellow": "#f5a623",
+            "state-success": "#10b981",
+            surface: "#f8f9fa",
+            "surface-card": "#ffffff",
+            "border-subtle": "#e1e3e4"
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            sans: ['Cairo', 'Plus Jakarta Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .vote-pulse {
+      animation: pulseAnim 0.4s ease-out;
+    }
+    @keyframes pulseAnim {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f3f5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-[#f8f9fa] text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+<!-- TOP HEADER -->
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-border-subtle shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3.5">
+      <!-- SOTKonya Logo Emblem (SVG) -->
+      <div class="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#0e7c86] to-[#1a2f4c] p-2 flex items-center justify-center text-white shadow-md ring-2 ring-primary/20 shrink-0">
+        <svg viewBox="0 0 100 100" class="w-full h-full fill-current">
+          <!-- Flower Blossom & Graduation Motif -->
+          <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="4" opacity="0.3"/>
+          <path d="M50 15 L80 32 L50 49 L20 32 Z" fill="#f26430"/>
+          <path d="M50 49 L80 32 L80 60 L50 78 Z" fill="#0e7c86"/>
+          <path d="M50 49 L20 32 L20 60 L50 78 Z" fill="#f5a623"/>
+          <circle cx="50" cy="49" r="6" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="font-black text-lg sm:text-xl text-[#1a2f4c]">تجمع الطلبة السوريين في قونيا</span>
+          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-[#0e7c86]/10 text-[#0e7c86] border border-[#0e7c86]/20">SOTKonya</span>
+        </div>
+        <span class="text-xs sm:text-sm text-slate-500 font-medium hidden xs:block">منظومة تسجيل وتصويت المرشحين المباشرة • الدورة الانتخابية</span>
+      </div>
+    </div>
+
+    <!-- Header Actions & Status Indicator -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button id="share-platform-btn" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-primary/10 hover:text-primary transition flex items-center gap-1.5 border border-slate-200">
+        <span class="material-symbols-outlined text-[18px]">share</span>
+        <span class="hidden sm:inline">مشاركة المنصة</span>
+      </button>
+
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-state-success border border-emerald-200/60 text-xs font-bold">
+        <span class="w-2.5 h-2.5 rounded-full bg-state-success animate-ping"></span>
+        <span>التصويت الإلكتروني نشط</span>
+      </div>
+
+      <div class="text-xs bg-slate-100 text-slate-600 px-3 py-1.5 rounded-xl font-semibold flex items-center gap-1.5 border border-slate-200">
+        <span class="material-symbols-outlined text-[18px] text-primary">verified_user</span>
+        <span class="hidden xs:inline">مأمون وموثق</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN CONTENT AREA -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+
+  <!-- STATS STRIP & HERO BANNER -->
+  <div class="bg-gradient-to-l from-[#1a2f4c] via-[#0e7c86] to-[#166380] rounded-2xl p-6 sm:p-8 text-white shadow-xl mb-8 relative overflow-hidden">
+    <div class="absolute -right-16 -top-16 w-56 h-56 bg-accent-orange/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute left-1/3 -bottom-16 w-48 h-48 bg-accent-yellow/20 rounded-full blur-2xl pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      <div>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3 backdrop-blur-sm border border-white/20">
+          <span class="material-symbols-outlined text-[16px]">how_to_vote</span>
+          العملية الانتخابية الرسمية المباشرة
+        </span>
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black mb-2 leading-tight">منصة الاقتراع والترشح للانتخابات الطلابية</h1>
+        <p class="text-white/85 text-sm sm:text-base max-w-2xl leading-relaxed">
+          تصويت منفصل وشفاف لكل من منصب <span class="font-bold text-accent-yellow">الأمين العام</span> ومقاعد <span class="font-bold text-accent-yellow">الهيئة الرقابية</span>. يتم احتساب وتحديث الأصوات والنسب لحظياً وبشكل مباشر!
+        </p>
+      </div>
+
+      <!-- Metric Badges Breakdown -->
+      <div class="grid grid-cols-3 gap-3 shrink-0">
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-sm min-w-[100px] sm:min-w-[120px]">
+          <span class="text-xs text-white/80 font-medium block mb-1">إجمالي الأصوات</span>
+          <span class="text-2xl sm:text-3xl font-black text-white" id="stat-total-votes">0</span>
+          <span class="text-[10px] sm:text-[11px] text-accent-yellow font-bold mt-1 block">تحديث لحظي</span>
+        </div>
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-sm min-w-[100px] sm:min-w-[120px]">
+          <span class="text-xs text-white/80 font-medium block mb-1">مرشحو الأمانة</span>
+          <span class="text-2xl sm:text-3xl font-black text-white" id="stat-general-candidates">0</span>
+          <span class="text-[10px] sm:text-[11px] text-white/80 font-medium mt-1 block">الأمين العام</span>
+        </div>
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-sm min-w-[100px] sm:min-w-[120px]">
+          <span class="text-xs text-white/80 font-medium block mb-1">مرشحو الرقابية</span>
+          <span class="text-2xl sm:text-3xl font-black text-white" id="stat-oversight-candidates">0</span>
+          <span class="text-[10px] sm:text-[11px] text-white/80 font-medium mt-1 block">الهيئة الرقابية</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD CANDIDATE FORM SECTION -->
+  <div class="bg-white rounded-2xl p-6 sm:p-7 shadow-sm border border-border-subtle mb-10">
+    <div class="flex items-center justify-between pb-4 mb-4 border-b border-border-subtle">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined text-[24px]">person_add</span>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-tertiary">إضافة وترشيح مرشح جديد</h2>
+          <p class="text-xs text-slate-500">أدخل بيانات المرشح وحدد القسم الانتخابي لإدراجه فوراً في قائمة التصويت المباشر</p>
+        </div>
+      </div>
+      <span class="text-xs bg-orange-50 text-accent-orange border border-orange-200/80 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">bolt</span>
+        إدراج فوري
+      </span>
+    </div>
+
+    <form id="candidate-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+      <div>
+        <label for="cand-name" class="block text-xs font-bold text-slate-700 mb-1.5">
+          اسم المرشح الكامل <span class="text-accent-red">*</span>
+        </label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute right-3 top-3 text-slate-400 text-[18px]">badge</span>
+          <input type="text" id="cand-name" required placeholder="مثال: م. عبد الرحمن الشيخ"
+                 class="w-full h-11 pr-9 pl-3 text-sm rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"/>
+        </div>
+      </div>
+
+      <div>
+        <label for="cand-category" class="block text-xs font-bold text-slate-700 mb-1.5">
+          القسم الانتخابي / المنصب <span class="text-accent-red">*</span>
+        </label>
+        <div class="relative">
+          <select id="cand-category" required class="w-full h-11 px-3 text-sm rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition bg-white text-slate-700 font-semibold">
+            <option value="الأمين العام">قسم: الأمين العام (General Secretariat)</option>
+            <option value="الهيئة الرقابية">قسم: الهيئة الرقابية (Oversight Board)</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label for="cand-university" class="block text-xs font-bold text-slate-700 mb-1.5">
+          الجامعة / الكلية والتخصص <span class="text-accent-red">*</span>
+        </label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute right-3 top-3 text-slate-400 text-[18px]">school</span>
+          <input type="text" id="cand-university" required placeholder="مثال: جامعة سلجوق - هندسة ميكاترونكس"
+                 class="w-full h-11 pr-9 pl-3 text-sm rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"/>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" class="w-full h-11 bg-primary hover:bg-[#00626a] text-white font-bold rounded-xl text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-95">
+          <span class="material-symbols-outlined text-[20px]">add_circle</span>
+          <span>إضافة المرشح الآن</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- SEARCH, FILTER & CONTROLS BAR -->
+  <div class="bg-white rounded-2xl p-4 shadow-sm border border-border-subtle mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+    <!-- Search Bar -->
+    <div class="relative flex-1">
+      <span class="material-symbols-outlined absolute right-3 top-3 text-slate-400 text-[20px]">search</span>
+      <input type="text" id="search-input" placeholder="ابحث عن مرشح بالاسم أو الجامعة..."
+             class="w-full h-10 pr-10 pl-4 text-sm rounded-xl border border-slate-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition"/>
+    </div>
+
+    <!-- Category Filter Tabs & Control Buttons -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <button id="filter-all" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-primary text-white transition flex items-center gap-1 filter-tab">
+        الكل
+      </button>
+      <button id="filter-general" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1 filter-tab">
+        الأمين العام
+      </button>
+      <button id="filter-oversight" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1 filter-tab">
+        الهيئة الرقابية
+      </button>
+
+      <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+
+      <!-- Action Buttons -->
+      <button id="sort-votes-btn" class="px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:border-primary hover:text-primary transition flex items-center gap-1 shadow-sm" title="ترتيب حسب الأعلى أصواتاً">
+        <span class="material-symbols-outlined text-[16px]">sort</span>
+        <span class="hidden sm:inline">الأكثر أصواتاً</span>
+      </button>
+
+      <button id="export-report-btn" class="px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-600 transition flex items-center gap-1 shadow-sm" title="تصدير النتائج كتقرير Excel/CSV">
+        <span class="material-symbols-outlined text-[16px]">download</span>
+        <span class="hidden sm:inline">تصدير تقرير</span>
+      </button>
+
+      <button id="reset-votes-btn" class="px-2.5 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-400 hover:text-accent-red hover:border-red-200 transition flex items-center gap-1" title="إعادة تعيين الأصوات">
+        <span class="material-symbols-outlined text-[16px]">restart_alt</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= SECTION 1: GENERAL SECRETARY ================= -->
+  <section id="section-general" class="mb-12">
+    <div class="bg-gradient-to-r from-orange-500/10 via-[#0e7c86]/5 to-transparent p-4 sm:p-5 rounded-2xl border-r-4 border-r-accent-orange border border-slate-200/80 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-orange to-[#d93829] text-white flex items-center justify-center shadow-md">
+          <span class="material-symbols-outlined text-[28px]">stars</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="text-xl font-black text-tertiary">انتخابات منصب الأمين العام</h3>
+            <span id="badge-count-general" class="text-xs px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-950 border border-orange-200 font-bold">0 مرشح</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">المرشحون المتنافسون على قيادة تجمع الطلبة السوريين في قونيا وإدارته التنفيذية</p>
+        </div>
+      </div>
+      <div class="text-xs bg-white text-slate-600 px-3 py-1.5 rounded-xl border border-slate-200 self-start sm:self-auto font-medium shadow-sm">
+        نسب الأصوات محسوبة ضمن أصوات الأمانة العامة (<span id="sum-votes-general" class="font-bold text-accent-orange">0</span> صوت)
+      </div>
+    </div>
+
+    <!-- General Secretary Candidates Grid -->
+    <div id="candidates-general-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      <!-- Injected dynamically via JS -->
+    </div>
+  </section>
+
+  <!-- ================= SECTION 2: SUPERVISORY BOARD ================= -->
+  <section id="section-oversight" class="mb-8">
+    <div class="bg-gradient-to-r from-[#0e7c86]/10 via-[#1b9aaa]/5 to-transparent p-4 sm:p-5 rounded-2xl border-r-4 border-r-primary border border-slate-200/80 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0e7c86] to-[#166380] text-white flex items-center justify-center shadow-md">
+          <span class="material-symbols-outlined text-[28px]">gavel</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="text-xl font-black text-tertiary">انتخابات أعضاء الهيئة الرقابية</h3>
+            <span id="badge-count-oversight" class="text-xs px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-950 border border-teal-200 font-bold">0 مرشحين</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">المرشحون لمقاعد الهيئة الرقابية لضمان شفافية القرارات ومتابعة تنفيذ اللوائح الداخلية</p>
+        </div>
+      </div>
+      <div class="text-xs bg-white text-slate-600 px-3 py-1.5 rounded-xl border border-slate-200 self-start sm:self-auto font-medium shadow-sm">
+        نسب الأصوات محسوبة ضمن أصوات الهيئة الرقابية (<span id="sum-votes-oversight" class="font-bold text-primary">0</span> صوت)
+      </div>
+    </div>
+
+    <!-- Supervisory Board Candidates Grid -->
+    <div id="candidates-oversight-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Injected dynamically via JS -->
+    </div>
+  </section>
+
+  <!-- Notification Toast (Fixed Bottom) -->
+  <div id="vote-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1a2f4c] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none translate-y-4 border border-white/20">
+    <span class="material-symbols-outlined text-state-success text-[24px]">check_circle</span>
+    <span id="vote-toast-text" class="text-sm font-bold">تم تسجيل الصوت بنجاح!</span>
+  </div>
+
+  <!-- Share Modal -->
+  <div id="share-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in duration-200">
+      <button id="close-share-modal" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
+          <span class="material-symbols-outlined text-[32px]">share</span>
+        </div>
+        <h3 class="text-lg font-bold text-tertiary">مشاركة منصة التصويت</h3>
+        <p class="text-xs text-slate-500 mt-1">انشر رابط الانتخابات لزملائك الطلبة للمشاركة في التصويت</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <button id="share-whatsapp" class="p-3 rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold text-xs flex items-center justify-center gap-2 border border-emerald-200 transition">
+          <span class="material-symbols-outlined text-[20px]">chat</span>
+          <span>واتساب WhatsApp</span>
+        </button>
+        <button id="share-telegram" class="p-3 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-bold text-xs flex items-center justify-center gap-2 border border-sky-200 transition">
+          <span class="material-symbols-outlined text-[20px]">send</span>
+          <span>تلغرام Telegram</span>
+        </button>
+      </div>
+
+      <div class="relative">
+        <input type="text" id="share-link-input" readonly class="w-full h-11 pr-3 pl-20 text-xs rounded-xl border border-slate-200 bg-slate-50 text-slate-600 font-mono outline-none"/>
+        <button id="copy-share-link" class="absolute left-1 top-1 bottom-1 px-3 bg-primary hover:bg-[#00626a] text-white text-xs font-bold rounded-lg transition flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">content_copy</span>
+          <span>نسخ</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="w-full bg-white border-t border-border-subtle mt-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+    <div class="flex items-center gap-2.5">
+      <div class="h-7 w-7 rounded-lg bg-primary p-1 text-white flex items-center justify-center shrink-0">
+        <svg viewBox="0 0 100 100" class="w-full h-full fill-current">
+          <path d="M50 15 L80 32 L50 49 L20 32 Z" fill="#f26430"/>
+          <path d="M50 49 L80 32 L80 60 L50 78 Z" fill="#ffffff"/>
+          <path d="M50 49 L20 32 L20 60 L50 78 Z" fill="#f5a623"/>
+        </svg>
+      </div>
+      <span>© 2025 تجمع الطلبة السوريين في قونيا (SOTKonya) • منصة التصويت المباشر</span>
+    </div>
+
+    <div class="flex items-center gap-4 flex-wrap justify-center">
+      <span>جامعات قونيا: سلجوق • أربكان • قونيا التقنية • كاراتاي</span>
+      <span class="text-primary font-bold">بوابة انتخابية طلابية مستقلة وموثقة</span>
+    </div>
+  </div>
+</footer>
+
+<!-- INTERACTIVE JS ENGINE -->
+<script>
+  // Initial Candidates Dataset with two distinct categories
+  const defaultCandidates = [
+    // 1. General Secretary Candidates (الأمين العام)
+    {
+      id: 1,
+      category: "الأمين العام",
+      name: "م. أنس العبدالله",
+      university: "جامعة سلجوق - كلية الهندسة المعمارية والتصميم",
+      votes: 184,
+      colorClass: "from-[#ea7a24] to-[#d93829]"
+    },
+    {
+      id: 2,
+      category: "الأمين العام",
+      name: "مرح الخالد",
+      university: "جامعة نجم الدين أربكان - كلية الطب البشري",
+      votes: 156,
+      colorClass: "from-[#f5a623] to-[#ea7a24]"
+    },
+    // 2. Supervisory Board Candidates (الهيئة الرقابية)
+    {
+      id: 3,
+      category: "الهيئة الرقابية",
+      name: "عمر النجار",
+      university: "جامعة قونيا التقنية - هندسة مدنية",
+      votes: 112,
+      colorClass: "from-[#0e7c86] to-[#1b9aaa]"
+    },
+    {
+      id: 4,
+      category: "الهيئة الرقابية",
+      name: "ريم القدور",
+      university: "جامعة كاراتاي - كلية إدارة الأعمال",
+      votes: 94,
+      colorClass: "from-[#1a2f4c] to-[#0e7c86]"
+    },
+    {
+      id: 5,
+      category: "الهيئة الرقابية",
+      name: "طارق الحلبي",
+      university: "جامعة سلجوق - كلية الحقوق والعلوم السياسية",
+      votes: 78,
+      colorClass: "from-[#0e7c86] to-[#166380]"
+    }
+  ];
+
+  // State Management with localStorage Persistence
+  let candidates = loadCandidates();
+  let userVotedIds = loadUserVotedIds();
+  let currentSearchQuery = '';
+  let activeCategoryFilter = 'all';
+
+  function loadCandidates() {
+    try {
+      const saved = localStorage.getItem('sotkonya_candidates_v1');
+      if (saved) return JSON.parse(saved);
+    } catch(e) {
+      console.error('Failed to load candidates from storage', e);
+    }
+    return JSON.parse(JSON.stringify(defaultCandidates));
+  }
+
+  function saveCandidates() {
+    try {
+      localStorage.setItem('sotkonya_candidates_v1', JSON.stringify(candidates));
+    } catch(e) {
+      console.error('Failed to save candidates to storage', e);
+    }
+  }
+
+  function loadUserVotedIds() {
+    try {
+      const saved = localStorage.getItem('sotkonya_user_voted_ids');
+      if (saved) return JSON.parse(saved);
+    } catch(e) {}
+    return [];
+  }
+
+  function saveUserVotedIds() {
+    try {
+      localStorage.setItem('sotkonya_user_voted_ids', JSON.stringify(userVotedIds));
+    } catch(e) {}
+  }
+
+  // Synchronize live changes across tabs
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'sotkonya_candidates_v1') {
+      candidates = loadCandidates();
+      renderCandidates();
+    }
+  });
+
+  // Helper: calculate category votes and total votes
+  function getCategoryVotes(category) {
+    return candidates
+      .filter(c => c.category === category)
+      .reduce((sum, c) => sum + c.votes, 0);
+  }
+
+  function getTotalVotes() {
+    return candidates.reduce((sum, c) => sum + c.votes, 0);
+  }
+
+  // Role-specific badge renderer
+  function getCategoryBadge(category) {
+    if (category === 'الأمين العام') {
+      return `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-950 border border-orange-200">
+                <span class="material-symbols-outlined text-[15px] text-accent-orange">stars</span>
+                مرشح الأمانة العامة
+              </span>`;
+    }
+    return `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-950 border border-teal-200">
+              <span class="material-symbols-outlined text-[15px] text-primary">gavel</span>
+              مرشح الهيئة الرقابية
+            </span>`;
+  }
+
+  // Helper: Create Candidate Card DOM Element
+  function createCandidateCard(candidate, categoryVotes) {
+    const percentage = categoryVotes > 0 ? ((candidate.votes / categoryVotes) * 100).toFixed(1) : 0;
+    const isGeneral = candidate.category === "الأمين العام";
+    const hasVotedThis = userVotedIds.includes(candidate.id);
+
+    const card = document.createElement('div');
+    card.id = `candidate-card-${candidate.id}`;
+    card.className = `bg-white rounded-2xl border ${hasVotedThis ? 'border-emerald-400 ring-2 ring-emerald-400/20' : 'border-border-subtle'} p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative overflow-hidden group`;
+
+    card.innerHTML = `
+      <!-- Top Accent Line -->
+      <div class="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-r ${candidate.colorClass}"></div>
+
+      <div>
+        <!-- Header with Role & Candidate ID -->
+        <div class="flex items-start justify-between gap-2 mb-3.5 pt-1">
+          ${getCategoryBadge(candidate.category)}
+          <div class="flex items-center gap-1.5">
+            ${hasVotedThis ? '<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">check</span> تم تصويتك</span>' : ''}
+            <span class="text-xs text-slate-400 font-semibold bg-slate-100 px-2 py-0.5 rounded-md">#${candidate.id}</span>
+          </div>
+        </div>
+
+        <!-- Candidate Identity -->
+        <div class="flex items-center gap-3.5 mb-4">
+          <div class="w-12 h-12 rounded-2xl ${isGeneral ? 'bg-orange-50 text-accent-orange border-orange-200' : 'bg-teal-50 text-primary border-teal-200'} flex items-center justify-center font-black text-xl shadow-inner shrink-0 border">
+            ${candidate.name.charAt(0)}
+          </div>
+          <div class="min-w-0">
+            <h4 class="font-extrabold text-base sm:text-lg text-slate-800 leading-snug truncate">${candidate.name}</h4>
+            <div class="flex items-center gap-1 text-xs text-slate-500 mt-1 truncate">
+              <span class="material-symbols-outlined text-[15px] text-slate-400">school</span>
+              <span class="truncate" title="${candidate.university}">${candidate.university}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Big Live Vote Counter -->
+        <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 mb-4">
+          <div class="flex items-baseline justify-between mb-1.5">
+            <div class="flex items-baseline gap-1.5">
+              <span id="vote-count-${candidate.id}" class="text-2xl sm:text-3xl font-black text-tertiary tracking-tight transition-all duration-300">
+                ${candidate.votes.toLocaleString('ar-EG')}
+              </span>
+              <span class="text-xs text-slate-500 font-medium">صوت</span>
+            </div>
+            <div class="text-left">
+              <span id="vote-pct-${candidate.id}" class="text-sm font-extrabold ${isGeneral ? 'text-accent-orange' : 'text-primary'}">
+                ${percentage}%
+              </span>
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+            <div id="vote-bar-${candidate.id}" class="h-full rounded-full bg-gradient-to-l ${isGeneral ? 'from-amber-500 to-accent-orange' : 'from-primary to-secondary'} transition-all duration-500" style="width: ${percentage}%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct Vote Action Button -->
+      <button onclick="addVote(${candidate.id})" class="w-full py-3 px-4 rounded-xl ${isGeneral ? 'bg-primary hover:bg-[#00626a]' : 'bg-[#0e7c86] hover:bg-[#1a2f4c]'} text-white font-bold text-sm transition-all duration-200 shadow hover:shadow-md flex items-center justify-center gap-2 active:scale-95 group-hover:ring-2 ${isGeneral ? 'group-hover:ring-accent-orange/30' : 'group-hover:ring-primary/20'}">
+        <span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">how_to_vote</span>
+        <span>${hasVotedThis ? 'إضافة صوت إضافي (+1)' : 'تصويت لهذا المرشح (+1)'}</span>
+      </button>
+    `;
+
+    return card;
+  }
+
+  // Render Candidates into respective separated containers
+  function renderCandidates() {
+    const generalContainer = document.getElementById('candidates-general-container');
+    const oversightContainer = document.getElementById('candidates-oversight-container');
+
+    let filtered = candidates;
+
+    // Apply search filter if present
+    if (currentSearchQuery) {
+      const q = currentSearchQuery.toLowerCase();
+      filtered = filtered.filter(c => c.name.toLowerCase().includes(q) || c.university.toLowerCase().includes(q));
+    }
+
+    const generalCandidates = filtered.filter(c => c.category === "الأمين العام");
+    const oversightCandidates = filtered.filter(c => c.category === "الهيئة الرقابية");
+
+    const generalVotes = getCategoryVotes("الأمين العام");
+    const oversightVotes = getCategoryVotes("الهيئة الرقابية");
+    const totalVotes = getTotalVotes();
+
+    // Update summary counters
+    document.getElementById('stat-total-votes').textContent = totalVotes.toLocaleString('ar-EG');
+    document.getElementById('stat-general-candidates').textContent = candidates.filter(c => c.category === "الأمين العام").length.toLocaleString('ar-EG');
+    document.getElementById('stat-oversight-candidates').textContent = candidates.filter(c => c.category === "الهيئة الرقابية").length.toLocaleString('ar-EG');
+
+    // Update Section Header summaries
+    document.getElementById('badge-count-general').textContent = generalCandidates.length + ' مرشحين';
+    document.getElementById('badge-count-oversight').textContent = oversightCandidates.length + ' مرشحين';
+    document.getElementById('sum-votes-general').textContent = generalVotes.toLocaleString('ar-EG');
+    document.getElementById('sum-votes-oversight').textContent = oversightVotes.toLocaleString('ar-EG');
+
+    // Render General Secretary cards
+    generalContainer.innerHTML = '';
+    if (generalCandidates.length === 0) {
+      generalContainer.innerHTML = `<div class="col-span-full p-8 text-center bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 text-sm">لا يوجد مرشحون يطابقون البحث في قسم الأمين العام.</div>`;
+    } else {
+      generalCandidates.forEach(cand => {
+        generalContainer.appendChild(createCandidateCard(cand, generalVotes));
+      });
+    }
+
+    // Render Oversight Board cards
+    oversightContainer.innerHTML = '';
+    if (oversightCandidates.length === 0) {
+      oversightContainer.innerHTML = `<div class="col-span-full p-8 text-center bg-white rounded-2xl border border-dashed border-slate-300 text-slate-400 text-sm">لا يوجد مرشحون يطابقون البحث في قسم الهيئة الرقابية.</div>`;
+    } else {
+      oversightCandidates.forEach(cand => {
+        oversightContainer.appendChild(createCandidateCard(cand, oversightVotes));
+      });
+    }
+
+    // Handle section visibility based on tab filters
+    const secGeneral = document.getElementById('section-general');
+    const secOversight = document.getElementById('section-oversight');
+
+    if (activeCategoryFilter === 'general') {
+      secGeneral.classList.remove('hidden');
+      secOversight.classList.add('hidden');
+    } else if (activeCategoryFilter === 'oversight') {
+      secGeneral.classList.add('hidden');
+      secOversight.classList.remove('hidden');
+    } else {
+      secGeneral.classList.remove('hidden');
+      secOversight.classList.remove('hidden');
+    }
+  }
+
+  // Add vote (+1) with instant storage update
+  window.addVote = function(candidateId) {
+    const candidate = candidates.find(c => c.id === candidateId);
+    if (!candidate) return;
+
+    candidate.votes += 1;
+    saveCandidates();
+
+    if (!userVotedIds.includes(candidateId)) {
+      userVotedIds.push(candidateId);
+      saveUserVotedIds();
+    }
+    
+    renderCandidates();
+
+    // Animate candidate card
+    const card = document.getElementById(`candidate-card-${candidateId}`);
+    if (card) {
+      card.classList.add('vote-pulse');
+      setTimeout(() => {
+        card.classList.remove('vote-pulse');
+      }, 400);
+    }
+
+    // Show toast
+    showToast(`تم تسجيل صوت للمرشح: "${candidate.name}" بنجاح!`);
+  };
+
+  // Show temporary toast feedback
+  function showToast(message) {
+    const toast = document.getElementById('vote-toast');
+    const text = document.getElementById('vote-toast-text');
+    text.textContent = message;
+    toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+    toast.classList.add('opacity-100', 'translate-y-0');
+
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => {
+      toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+      toast.classList.remove('opacity-100', 'translate-y-0');
+    }, 2500);
+  }
+
+  // Search Input listener
+  document.getElementById('search-input').addEventListener('input', function(e) {
+    currentSearchQuery = e.target.value.trim();
+    renderCandidates();
+  });
+
+  // Filter Tabs Listeners
+  document.getElementById('filter-all').addEventListener('click', function() {
+    activeCategoryFilter = 'all';
+    updateFilterTabStyles(this);
+    renderCandidates();
+  });
+
+  document.getElementById('filter-general').addEventListener('click', function() {
+    activeCategoryFilter = 'general';
+    updateFilterTabStyles(this);
+    renderCandidates();
+  });
+
+  document.getElementById('filter-oversight').addEventListener('click', function() {
+    activeCategoryFilter = 'oversight';
+    updateFilterTabStyles(this);
+    renderCandidates();
+  });
+
+  function updateFilterTabStyles(activeBtn) {
+    document.querySelectorAll('.filter-tab').forEach(btn => {
+      btn.classList.remove('bg-primary', 'text-white');
+      btn.classList.add('bg-slate-100', 'text-slate-700');
+    });
+    activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
+    activeBtn.classList.add('bg-primary', 'text-white');
+  }
+
+  // Add candidate form handling
+  document.getElementById('candidate-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const nameInput = document.getElementById('cand-name');
+    const categoryInput = document.getElementById('cand-category');
+    const uniInput = document.getElementById('cand-university');
+
+    const name = nameInput.value.trim();
+    const category = categoryInput.value.trim();
+    const university = uniInput.value.trim();
+
+    if (!name || !category || !university) return;
+
+    const newId = candidates.length > 0 ? Math.max(...candidates.map(c => c.id)) + 1 : 1;
+
+    let assignedColor = category === "الأمين العام" 
+      ? "from-[#ea7a24] to-[#d93829]" 
+      : "from-[#0e7c86] to-[#1b9aaa]";
+
+    const newCandidate = {
+      id: newId,
+      category: category,
+      name: name,
+      university: university,
+      votes: 0,
+      colorClass: assignedColor
+    };
+
+    candidates.unshift(newCandidate);
+    saveCandidates();
+    renderCandidates();
+
+    // Reset form
+    nameInput.value = '';
+    uniInput.value = '';
+    nameInput.focus();
+
+    showToast(`تم إدراج المرشح "${name}" في قسم ${category} بنجاح!`);
+
+    // Scroll to appropriate section
+    const targetSectionId = category === "الأمين العام" ? 'candidates-general-container' : 'candidates-oversight-container';
+    const targetEl = document.getElementById(targetSectionId);
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  });
+
+  // Sorting candidates by votes within their categories
+  document.getElementById('sort-votes-btn').addEventListener('click', function() {
+    candidates.sort((a, b) => b.votes - a.votes);
+    saveCandidates();
+    renderCandidates();
+    showToast('تم ترتيب المرشحين في كلا القسمين حسب الأكثر أصواتاً!');
+  });
+
+  // Export Report Feature (CSV Download)
+  document.getElementById('export-report-btn').addEventListener('click', function() {
+    let csvContent = "\uFEFFالرقم,الاسم,القسم,الجامعة والتخصص,عدد الأصوات\n";
+    candidates.forEach(c => {
+      csvContent += `${c.id},"${c.name}","${c.category}","${c.university}",${c.votes}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `تقرير_انتخابات_تجمع_الطلبة_قونيا_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('تم تصدير تقرير النتائج بنجاح!');
+  });
+
+  // Share Modal Logic
+  const shareModal = document.getElementById('share-modal');
+  const shareLinkInput = document.getElementById('share-link-input');
+  
+  document.getElementById('share-platform-btn').addEventListener('click', function() {
+    const pageUrl = window.location.href;
+    shareLinkInput.value = pageUrl;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'منصة انتخابات تجمع الطلبة السوريين في قونيا',
+        text: 'شارك في التصويت المباشر لانتخابات الأمانة العامة والهيئة الرقابية!',
+        url: pageUrl
+      }).catch(() => {
+        shareModal.classList.remove('hidden');
+        shareModal.classList.add('flex');
+      });
+    } else {
+      shareModal.classList.remove('hidden');
+      shareModal.classList.add('flex');
+    }
+  });
+
+  document.getElementById('close-share-modal').addEventListener('click', function() {
+    shareModal.classList.add('hidden');
+    shareModal.classList.remove('flex');
+  });
+
+  document.getElementById('copy-share-link').addEventListener('click', function() {
+    shareLinkInput.select();
+    navigator.clipboard.writeText(shareLinkInput.value);
+    showToast('تم نسخ رابط المنصة إلى الحافظة!');
+  });
+
+  document.getElementById('share-whatsapp').addEventListener('click', function() {
+    const text = encodeURIComponent('شارك في التصويت المباشر لانتخابات تجمع الطلبة السوريين في قونيا SOTKonya: ' + window.location.href);
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  });
+
+  document.getElementById('share-telegram').addEventListener('click', function() {
+    const text = encodeURIComponent('شارك في التصويت المباشر لانتخابات تجمع الطلبة السوريين في قونيا SOTKonya');
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+  });
+
+  // Reset votes confirmation
+  document.getElementById('reset-votes-btn').addEventListener('click', function() {
+    if (confirm('هل ترغب حقاً في تصفير جميع الأصوات وإعادة الضبط للافتراضي؟')) {
+      candidates = JSON.parse(JSON.stringify(defaultCandidates));
+      userVotedIds = [];
+      saveCandidates();
+      saveUserVotedIds();
+      renderCandidates();
+      showToast('تمت إعادة تعيين البيانات للافتراضية بنجاح.');
+    }
+  });
+
+  // Initial render execution
+  renderCandidates();
+</script>
+</body>
+</html>
