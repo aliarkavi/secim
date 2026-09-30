@@ -3,6 +3,7 @@
   "name": "sotkonya-voting-platform",
   "cleanUrls": true,
   "trailingSlash": false,
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/(.*)",
