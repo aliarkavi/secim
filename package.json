@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "منظومة تسجيل وتصويت المرشحين - تجمع الطلبة السوريين في قونيا SOTKonya",
   "main": "index.html",
+  "scripts": {
+    "build": "mkdir -p public && cp index.html public/"
+  },
   "keywords": [
     "voting",
     "sotkonya",
