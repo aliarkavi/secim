@@ -68,6 +68,46 @@
 </head>
 <body class="bg-[#f8f9fa] text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
+<!-- GLOBAL FULL-PAGE SECURITY LOCK FOR ADMIN PAGE -->
+<div id="global-admin-lock-screen" class="fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur-2xl flex items-center justify-center p-4 text-slate-800">
+  <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-center space-y-6">
+    <div class="w-20 h-20 rounded-3xl bg-teal-50 text-primary border border-teal-200 flex items-center justify-center mx-auto shadow-inner">
+      <span class="material-symbols-outlined text-[48px]">admin_panel_settings</span>
+    </div>
+
+    <div>
+      <span class="px-3 py-1 text-xs font-bold rounded-full bg-red-100 text-red-700 border border-red-200 inline-block mb-2">منطقة محمية بالكامل 🔒</span>
+      <h2 class="text-xl sm:text-2xl font-black text-tertiary">لوحة إدارة الانتخابات (Admin)</h2>
+      <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+        صفحة الإدارة محمية بالكامل وتتطلب إدخال كلمة مرور رئيس لجنة الانتخابات (PIN) للوصول لكافة الأدوات والنتائج.
+      </p>
+    </div>
+
+    <form id="global-admin-lock-form" class="space-y-4">
+      <div>
+        <input type="password" id="global-admin-pin-input" required placeholder="أدخل رمز PIN الإداري" autofocus maxlength="10"
+               class="w-full h-14 text-center text-2xl font-black tracking-widest rounded-2xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none bg-slate-50 text-tertiary"/>
+        <p class="text-[11px] text-slate-400 mt-1.5">الرمز الافتراضي للجنة: <code class="font-mono bg-slate-100 px-1.5 py-0.5 rounded font-bold text-primary">1234</code></p>
+      </div>
+
+      <button type="submit" class="w-full py-3.5 bg-primary hover:bg-[#00626a] active:scale-95 text-white font-black rounded-2xl text-sm transition shadow-lg flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-[20px]">lock_open</span>
+        <span>التحقق ودخول لوحة الأدمن</span>
+      </button>
+    </form>
+
+    <div class="pt-2 border-t border-slate-100">
+      <a href="/" class="text-xs font-bold text-slate-500 hover:text-primary transition inline-flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        <span>العودة لبوابة الطلاب العامة</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- LOCKED MAIN ADMIN APP WRAPPER (HIDDEN UNTIL AUTHENTICATED) -->
+<div id="admin-page-content" class="hidden min-h-screen flex flex-col justify-between">
+
 <!-- TOP HEADER -->
 <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-border-subtle shadow-sm">
   <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 min-h-[4.25rem] flex flex-col md:flex-row md:items-center justify-between gap-2.5">
@@ -111,6 +151,11 @@
         <span class="material-symbols-outlined text-[17px] sm:text-[18px]">admin_panel_settings</span>
         <span class="hidden sm:inline">لوحة التحضير للأدمن</span>
         <span class="sm:hidden">التحضير ⚙️</span>
+      </button>
+
+      <button onclick="logoutAdmin()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold bg-red-50 hover:bg-red-100 text-red-700 transition flex items-center gap-1 sm:gap-1.5 border border-red-200 shadow-sm shrink-0" title="قفل الصفحة وتسجيل الخروج">
+        <span class="material-symbols-outlined text-[17px] sm:text-[18px]">lock</span>
+        <span class="hidden sm:inline">قفل الصفحة</span>
       </button>
     </div>
   </div>
@@ -663,6 +708,8 @@
   </div>
 </div>
 
+</div> <!-- END #admin-page-content -->
+
 <!-- Toast -->
 <div id="vote-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1a2f4c] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none translate-y-4 border border-white/20">
   <span class="material-symbols-outlined text-state-success text-[24px]">check_circle</span>
@@ -671,18 +718,58 @@
 
 <!-- INTERACTIVE SCRIPT ENGINE -->
 <script>
+  const SESSION_AUTH_KEY = 'sotkonya_admin_page_authenticated';
   const MASTER_STORAGE_CURRENT_SESSION = 'sotkonya_master_current_session';
   const MASTER_STORAGE_ARCHIVED_SESSIONS = 'sotkonya_master_archived_sessions';
   const MASTER_STORAGE_USER_VOTED_MAP = 'sotkonya_master_user_voted_map';
   const MASTER_STORAGE_ADMIN_PIN = 'sotkonya_master_admin_pin';
 
   let adminPin = localStorage.getItem(MASTER_STORAGE_ADMIN_PIN) || '1234';
-  let isAdminVerified = false;
+  let isAdminVerified = isPageAdminAuthenticated();
   let currentSession = loadCurrentSession();
   let archivedSessions = loadArchivedSessions();
   let userVotedMap = loadUserVotedMap();
   let currentSearchQuery = '';
   let activeBodyFilter = 'all';
+
+  function isPageAdminAuthenticated() {
+    return sessionStorage.getItem(SESSION_AUTH_KEY) === 'true';
+  }
+
+  function checkPageAuthentication() {
+    const lockScreen = document.getElementById('global-admin-lock-screen');
+    const pageContent = document.getElementById('admin-page-content');
+    
+    if (isPageAdminAuthenticated()) {
+      if (lockScreen) lockScreen.classList.add('hidden');
+      if (pageContent) pageContent.classList.remove('hidden');
+      isAdminVerified = true;
+    } else {
+      if (lockScreen) lockScreen.classList.remove('hidden');
+      if (pageContent) pageContent.classList.add('hidden');
+    }
+  }
+
+  document.getElementById('global-admin-lock-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const pinVal = document.getElementById('global-admin-pin-input').value.trim();
+    if (pinVal === adminPin) {
+      sessionStorage.setItem(SESSION_AUTH_KEY, 'true');
+      isAdminVerified = true;
+      checkPageAuthentication();
+      showToast('تم التحقق من الرمز الإداري بنجاح. مرحباً بك رئيس اللجنة.');
+    } else {
+      alert('❌ رمز PIN الإداري غير صحيح!');
+      document.getElementById('global-admin-pin-input').value = '';
+    }
+  });
+
+  function logoutAdmin() {
+    if (confirm('هل أنت متأكد من قفل شاشة الأدمن وتسجيل الخروج؟')) {
+      sessionStorage.removeItem(SESSION_AUTH_KEY);
+      window.location.reload();
+    }
+  }
 
   const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('sotkonya_voting_sync') : null;
 
@@ -1908,7 +1995,8 @@
     }, 2500);
   }
 
-  // INITIAL LOAD
+  // INITIAL LOAD & AUTH CHECK
+  checkPageAuthentication();
   renderAll();
 </script>
 </body>
