@@ -61,25 +61,26 @@
 
 <!-- TOP HEADER -->
 <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-    <div class="flex items-center gap-3.5">
-      <img src="logo.svg" alt="SOTKonya Logo" class="h-12 w-12 object-contain rounded-2xl bg-white shadow-md p-1 ring-2 ring-primary/20 shrink-0"/>
-      <div class="flex flex-col">
-        <div class="flex items-center gap-2 flex-wrap">
-          <span class="font-black text-lg sm:text-xl text-[#1a2f4c]">تجمع الطلبة السوريين في قونيا</span>
-          <span class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-[#0e7c86]/10 text-[#0e7c86] border border-[#0e7c86]/20">SOTKonya</span>
+  <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 min-h-[4.25rem] flex items-center justify-between gap-2.5">
+    <div class="flex items-center gap-2 sm:gap-3.5 min-w-0">
+      <img src="logo.svg" alt="SOTKonya Logo" class="h-10 w-10 sm:h-12 sm:w-12 object-contain rounded-2xl bg-white shadow-md p-1 ring-2 ring-primary/20 shrink-0"/>
+      <div class="flex flex-col min-w-0">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="font-black text-sm sm:text-lg text-[#1a2f4c] truncate">تجمع الطلبة السوريين بقونيا</span>
+          <span class="px-2 py-0.5 text-[10px] sm:text-xs font-bold rounded-full bg-[#0e7c86]/10 text-[#0e7c86] border border-[#0e7c86]/20 shrink-0">SOTKonya</span>
         </div>
-        <span class="text-xs sm:text-sm text-slate-500 font-medium">بوابة تصويت الطلاب والتصويت الإلكتروني</span>
+        <span class="text-[11px] sm:text-xs text-slate-500 font-medium truncate hidden xs:block">بوابة تصويت الطلاب والتصويت الإلكتروني</span>
       </div>
     </div>
 
-    <div class="flex items-center gap-2">
-      <button onclick="openArchiveModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#0e7c86]/10 text-[#0e7c86] hover:bg-[#0e7c86]/20 transition flex items-center gap-1.5 border border-[#0e7c86]/20 shadow-sm">
-        <span class="material-symbols-outlined text-[18px]">inventory_2</span>
-        <span>الأرشيف والنتائج 📦</span>
+    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <button onclick="openArchiveModal()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#0e7c86]/10 text-[#0e7c86] hover:bg-[#0e7c86]/20 transition flex items-center gap-1 sm:gap-1.5 border border-[#0e7c86]/20 shadow-sm">
+        <span class="material-symbols-outlined text-[17px] sm:text-[18px]">inventory_2</span>
+        <span class="hidden xs:inline">الأرشيف والنتائج</span>
+        <span class="xs:hidden">الأرشيف</span>
       </button>
-      <a href="/admin" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 border border-slate-200">
-        <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+      <a href="/admin" target="_blank" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1 sm:gap-1.5 border border-slate-200">
+        <span class="material-symbols-outlined text-[17px] sm:text-[18px]">admin_panel_settings</span>
         <span class="hidden sm:inline">دخول اللجنة (Admin)</span>
       </a>
     </div>
@@ -87,38 +88,38 @@
 </header>
 
 <!-- MAIN CONTENT AREA -->
-<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1">
+<main class="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 w-full flex-1">
 
   <!-- ================= STAGE 1: LOGIN WITH ACCESS CODE ================= -->
-  <div id="voter-login-stage" class="max-w-md mx-auto my-6 space-y-6">
+  <div id="voter-login-stage" class="max-w-md mx-auto my-4 sm:my-6 space-y-5 sm:space-y-6">
     
     <!-- Session Banner -->
-    <div class="bg-gradient-to-l from-[#1a2f4c] via-[#0e7c86] to-[#166380] rounded-3xl p-6 sm:p-8 text-white text-center shadow-xl relative overflow-hidden">
+    <div class="bg-gradient-to-l from-[#1a2f4c] via-[#0e7c86] to-[#166380] rounded-3xl p-5 sm:p-8 text-white text-center shadow-xl relative overflow-hidden">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold mb-3 border border-white/20">
         <span class="material-symbols-outlined text-[16px]">how_to_vote</span>
         <span>بوابة تصويت الأعضاء والطلاب</span>
       </div>
-      <h2 id="login-session-title" class="text-xl sm:text-2xl font-black mb-2">جاري فحص الجلسة الانتخابية...</h2>
+      <h2 id="login-session-title" class="text-lg sm:text-2xl font-black mb-2">جاري فحص الجلسة الانتخابية...</h2>
       <p id="login-session-desc" class="text-white/85 text-xs sm:text-sm leading-relaxed">
         أدخل كود التصويت المخصص لك للدخول إلى الجلسة والتصويت.
       </p>
     </div>
 
     <!-- Access Code Input Form Card -->
-    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-xl text-center space-y-5">
-      <div class="w-16 h-16 rounded-2xl bg-teal-50 text-primary border border-teal-200 flex items-center justify-center mx-auto">
-        <span class="material-symbols-outlined text-[36px]">vpn_key</span>
+    <div class="bg-white rounded-3xl p-5 sm:p-8 border border-slate-200 shadow-xl text-center space-y-5">
+      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-teal-50 text-primary border border-teal-200 flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined text-[32px] sm:text-[36px]">vpn_key</span>
       </div>
 
       <div>
-        <h3 class="text-lg font-black text-tertiary mb-1">أدخل كود التصويت الخاص بك</h3>
+        <h3 class="text-base sm:text-lg font-black text-tertiary mb-1">أدخل كود التصويت الخاص بك</h3>
         <p class="text-xs text-slate-500">الكود مكون من خانات مثل: <code class="font-mono bg-slate-100 text-primary px-1.5 py-0.5 rounded font-bold">SOT-8491</code></p>
       </div>
 
       <form id="voter-login-form" class="space-y-4">
         <div>
           <input type="text" id="access-code-input" required placeholder="أدخل كود التصويت هنا" uppercase
-                 class="w-full h-14 text-center text-2xl font-black tracking-widest rounded-2xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none uppercase bg-slate-50 text-tertiary"/>
+                 class="w-full h-12 sm:h-14 text-center text-xl sm:text-2xl font-black tracking-widest rounded-2xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none uppercase bg-slate-50 text-tertiary"/>
           <p class="text-[11px] text-slate-400 mt-1.5">ملاحظة: الكود يُستخدم مرة واحدة فقط لمنع التكرار.</p>
         </div>
 
@@ -140,20 +141,20 @@
   </div>
 
   <!-- ================= STAGE 2: VOTING BOOTH (Shown after valid login) ================= -->
-  <div id="voter-booth-stage" class="space-y-8 hidden">
+  <div id="voter-booth-stage" class="space-y-6 sm:space-y-8 hidden">
     
     <!-- Top Active Code Banner -->
     <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-teal-50 text-primary border border-teal-200 flex items-center justify-center font-bold">
+        <div class="w-10 h-10 rounded-xl bg-teal-50 text-primary border border-teal-200 flex items-center justify-center font-bold shrink-0">
           <span class="material-symbols-outlined text-[22px]">badge</span>
         </div>
         <div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <span class="text-xs text-slate-500">مرحباً بك، كود التصويت النشط:</span>
             <span id="active-voter-code-badge" class="font-mono font-black text-sm text-tertiary bg-teal-50 px-2.5 py-0.5 rounded-lg border border-teal-200"></span>
           </div>
-          <h2 id="booth-session-title" class="text-base font-extrabold text-slate-800 mt-0.5"></h2>
+          <h2 id="booth-session-title" class="text-sm sm:text-base font-extrabold text-slate-800 mt-0.5"></h2>
         </div>
       </div>
 
@@ -170,19 +171,19 @@
     </div>
 
     <!-- CANDIDATES SELECTION BOOTH CONTAINER -->
-    <div id="booth-candidates-container" class="space-y-10">
+    <div id="booth-candidates-container" class="space-y-8 sm:space-y-10">
       <!-- Dynamically injected -->
     </div>
 
     <!-- BOTTOM ACTION BAR -->
-    <div class="sticky bottom-6 z-30 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="sticky bottom-4 sm:bottom-6 z-30 bg-white/95 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
       <div class="text-xs text-slate-600 font-bold space-y-0.5">
         <div>• الهيئة الإدارية: <span id="status-exec-choice" class="text-accent-red font-black">لم يُحدد</span></div>
         <div>• الهيئة الرقابية: <span id="status-oversight-choice" class="text-accent-red font-black">لم يُحدد</span></div>
       </div>
 
       <button id="submit-final-votes-btn" onclick="submitFinalStudentVotes()" disabled
-              class="py-3.5 px-8 rounded-xl font-black text-sm transition shadow-lg flex items-center justify-center gap-2 bg-slate-200 text-slate-400 cursor-not-allowed">
+              class="w-full sm:w-auto py-3.5 px-8 rounded-xl font-black text-sm transition shadow-lg flex items-center justify-center gap-2 bg-slate-200 text-slate-400 cursor-not-allowed">
         <span class="material-symbols-outlined text-[20px]">send</span>
         <span>تأكيد وإرسال أصواتي نهائياً 🚀</span>
       </button>
@@ -191,13 +192,13 @@
   </div>
 
   <!-- ================= STAGE 3: VOTE CONFIRMED & THANK YOU ================= -->
-  <div id="voter-success-stage" class="max-w-lg mx-auto my-10 bg-white rounded-3xl p-8 sm:p-10 text-center border border-slate-200 shadow-2xl space-y-6 hidden">
-    <div class="w-20 h-20 rounded-full bg-emerald-50 text-emerald-600 border-2 border-emerald-200 flex items-center justify-center mx-auto shadow-inner">
-      <span class="material-symbols-outlined text-[48px]">check_circle</span>
+  <div id="voter-success-stage" class="max-w-lg mx-auto my-8 sm:my-10 bg-white rounded-3xl p-6 sm:p-10 text-center border border-slate-200 shadow-2xl space-y-6 hidden">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-50 text-emerald-600 border-2 border-emerald-200 flex items-center justify-center mx-auto shadow-inner">
+      <span class="material-symbols-outlined text-[36px] sm:text-[48px]">check_circle</span>
     </div>
 
     <div>
-      <h2 class="text-2xl font-black text-tertiary mb-1">تم تسجيل صوتك بنجاح! 🎉</h2>
+      <h2 class="text-xl sm:text-2xl font-black text-tertiary mb-1">تم تسجيل صوتك بنجاح! 🎉</h2>
       <p class="text-xs text-slate-500">شكراً لمشاركتك في انتخابات تجمع الطلبة السوريين في قونيا</p>
     </div>
 
@@ -218,81 +219,81 @@
 </main>
 
 <!-- MODAL: ARCHIVE VIEWER -->
-<div id="archive-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-  <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
-    <div class="p-6 bg-tertiary text-white flex items-center justify-between">
+<div id="archive-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+  <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
+    <div class="p-4 sm:p-6 bg-tertiary text-white flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-          <span class="material-symbols-outlined text-[24px]">inventory_2</span>
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px] sm:text-[24px]">inventory_2</span>
         </div>
         <div>
-          <h3 class="text-lg font-bold">أرشيف الجلسات الانتخابية والنتائج</h3>
-          <p class="text-xs text-white/80">توثيق نتائج الانتخابات السابقة لتجمع الطلبة السوريين في قونيا</p>
+          <h3 class="text-base sm:text-lg font-bold">أرشيف الجلسات الانتخابية والنتائج</h3>
+          <p class="text-[11px] sm:text-xs text-white/80">توثيق نتائج الانتخابات السابقة لتجمع الطلبة السوريين في قونيا</p>
         </div>
       </div>
-      <button onclick="closeArchiveModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+      <button onclick="closeArchiveModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition shrink-0">
         <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
-    <div class="p-6 overflow-y-auto flex-1 space-y-4">
+    <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
       <div id="archived-sessions-list" class="space-y-4"></div>
     </div>
   </div>
 </div>
 
 <!-- MODAL: OFFICIAL RESULTS -->
-<div id="official-results-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md hidden items-center justify-center p-4">
-  <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
-    <div class="p-6 bg-gradient-to-r from-amber-500 via-primary to-tertiary text-white flex items-center justify-between no-print">
+<div id="official-results-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md hidden items-center justify-center p-3 sm:p-4">
+  <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[94vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
+    <div class="p-4 sm:p-6 bg-gradient-to-r from-amber-500 via-primary to-tertiary text-white flex items-center justify-between no-print">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-          <span class="material-symbols-outlined text-[32px]">emoji_events</span>
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[26px] sm:text-[32px]">emoji_events</span>
         </div>
         <div>
-          <h3 class="text-xl font-black">النتائج الرسمية وإعلان الفائزين بالانتخابات</h3>
-          <p id="results-session-title-sub" class="text-xs text-white/90 font-medium mt-0.5">محضر نتائج الاقتراع وتوثيق الهيئات الانتخابية</p>
+          <h3 class="text-base sm:text-xl font-black">النتائج الرسمية وإعلان الفائزين بالانتخابات</h3>
+          <p id="results-session-title-sub" class="text-[11px] sm:text-xs text-white/90 font-medium mt-0.5">محضر نتائج الاقتراع وتوثيق الهيئات الانتخابية</p>
         </div>
       </div>
-      <button onclick="closeOfficialResultsModal()" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition">
-        <span class="material-symbols-outlined text-[22px]">close</span>
+      <button onclick="closeOfficialResultsModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition shrink-0">
+        <span class="material-symbols-outlined text-[20px] sm:text-[22px]">close</span>
       </button>
     </div>
 
-    <div class="p-6 sm:p-8 overflow-y-auto flex-1 space-y-6 bg-slate-50">
+    <div class="p-4 sm:p-8 overflow-y-auto flex-1 space-y-5 sm:space-y-6 bg-slate-50">
       <div class="text-center border-b border-slate-200 pb-4">
-        <img src="logo.svg" alt="Logo" class="h-14 mx-auto mb-2"/>
-        <h2 class="text-2xl font-black text-tertiary">تجمع الطلبة السوريين في قونيا (SOTKonya)</h2>
-        <h4 id="print-session-title" class="text-base font-bold text-primary mt-1">التقرير الرسمي المعتمد لنتائج الانتخابات</h4>
-        <span id="print-session-date" class="text-xs text-slate-500 font-medium block mt-1"></span>
+        <img src="logo.svg" alt="Logo" class="h-10 sm:h-14 mx-auto mb-2"/>
+        <h2 class="text-xl sm:text-2xl font-black text-tertiary">تجمع الطلبة السوريين في قونيا (SOTKonya)</h2>
+        <h4 id="print-session-title" class="text-sm sm:text-base font-bold text-primary mt-1">التقرير الرسمي المعتمد لنتائج الانتخابات</h4>
+        <span id="print-session-date" class="text-[11px] sm:text-xs text-slate-500 font-medium block mt-1"></span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white rounded-2xl p-5 border-2 border-primary shadow-sm space-y-3 relative overflow-hidden">
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border-2 border-primary shadow-sm space-y-3 relative overflow-hidden">
           <div class="absolute top-0 right-0 left-0 h-2 bg-primary"></div>
           <div class="flex items-center justify-between pt-1">
             <span class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-950 border border-teal-200">🏛️ الهيئة الإدارية الفائزة</span>
-            <span class="material-symbols-outlined text-amber-500 text-[26px]">emoji_events</span>
+            <span class="material-symbols-outlined text-amber-500 text-[24px] sm:text-[26px]">emoji_events</span>
           </div>
           <div id="results-exec-winner-box" class="space-y-2"></div>
         </div>
 
-        <div class="bg-white rounded-2xl p-5 border-2 border-accent-orange shadow-sm space-y-3 relative overflow-hidden">
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border-2 border-accent-orange shadow-sm space-y-3 relative overflow-hidden">
           <div class="absolute top-0 right-0 left-0 h-2 bg-accent-orange"></div>
           <div class="flex items-center justify-between pt-1">
             <span class="text-xs font-bold px-3 py-1 rounded-full bg-orange-50 text-orange-950 border border-orange-200">🏆 الهيئة الرقابية المنتخبة</span>
-            <span class="material-symbols-outlined text-amber-500 text-[26px]">gavel</span>
+            <span class="material-symbols-outlined text-amber-500 text-[24px] sm:text-[26px]">gavel</span>
           </div>
           <div id="results-oversight-winners-box" class="space-y-2"></div>
         </div>
       </div>
 
       <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-        <div class="p-4 bg-slate-100 font-bold text-xs text-tertiary border-b border-slate-200 flex items-center justify-between">
+        <div class="p-3.5 sm:p-4 bg-slate-100 font-bold text-xs text-tertiary border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
           <span>الجدول التفصيلي لجميع المرشحين والأصوات المسجلة</span>
           <span id="results-total-votes-badge" class="text-xs font-extrabold text-primary"></span>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-right text-xs text-slate-700">
+        <div class="overflow-x-auto w-full">
+          <table class="w-full text-right text-xs text-slate-700 whitespace-nowrap">
             <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
               <tr>
                 <th class="p-3">#</th>
@@ -310,18 +311,18 @@
       </div>
     </div>
 
-    <div class="p-4 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
-      <div class="flex items-center gap-2">
-        <button onclick="window.print()" class="px-4 py-2.5 bg-tertiary hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow">
+    <div class="p-3.5 sm:p-4 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button onclick="window.print()" class="flex-1 sm:flex-initial px-3.5 py-2.5 bg-tertiary hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow">
           <span class="material-symbols-outlined text-[18px]">print</span>
-          <span>طباعة / حفظ PDF</span>
+          <span>طباعة / PDF</span>
         </button>
-        <button onclick="downloadActiveCSV()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow">
+        <button onclick="downloadActiveCSV()" class="flex-1 sm:flex-initial px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow">
           <span class="material-symbols-outlined text-[18px]">download</span>
           <span>تنزيل CSV</span>
         </button>
       </div>
-      <button onclick="closeOfficialResultsModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition">إغلاق</button>
+      <button onclick="closeOfficialResultsModal()" class="w-full sm:w-auto px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition">إغلاق</button>
     </div>
   </div>
 </div>
