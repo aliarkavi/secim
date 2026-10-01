@@ -99,6 +99,11 @@
         <span class="hidden sm:inline">أرشيف الجلسات</span>
       </button>
 
+      <button id="open-admin-voter-btn" onclick="openAdminVoterModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white transition flex items-center gap-1.5 shadow-md" title="تصويت عضو ليس معه هاتف من شاشة الأدمن">
+        <span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+        <span>تصويت عضو بدون جوال 🎓</span>
+      </button>
+
       <button id="open-admin-btn" onclick="openAdminModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-primary text-white hover:bg-[#00626a] transition flex items-center gap-1.5 shadow-md">
         <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
         <span>لوحة التحضير للأدمن</span>
@@ -589,6 +594,66 @@
   </div>
 </div>
 
+<!-- MODAL 4: ADMIN MEMBER VOTER (تصويت عضو بدون جوال) -->
+<div id="admin-voter-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md hidden items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-lg w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-100 relative overflow-hidden">
+    <div class="p-5 bg-gradient-to-r from-primary to-tertiary text-white flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined text-[24px]">how_to_vote</span>
+        </div>
+        <div>
+          <h3 class="text-base font-extrabold">تصويت عضو بدون جوال (من شاشة الأدمن)</h3>
+          <p class="text-xs text-white/80">اختيار مرشح إدارية ومرشح رقابية لحساب صوت واحد للمقترع</p>
+        </div>
+      </div>
+      <button onclick="closeAdminVoterModal()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <form id="admin-voter-form" class="p-6 overflow-y-auto flex-1 space-y-5 bg-slate-50 text-xs">
+      
+      <!-- Select Code or Custom Code -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+        <label for="admin-voter-select-code" class="block font-bold text-slate-700">اختر كود التصويت للعضو <span class="text-accent-red">*</span></label>
+        <select id="admin-voter-select-code" class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none font-mono font-bold text-tertiary bg-slate-50">
+          <!-- Dynamically populated -->
+        </select>
+      </div>
+
+      <!-- Select Exec Candidate (General Secretary) -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+        <label for="admin-voter-select-exec" class="block font-bold text-slate-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-primary">account_balance</span>
+          <span>1. مرشح الهيئة الإدارية (الأمين العام)</span>
+        </label>
+        <select id="admin-voter-select-exec" class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none font-bold text-slate-800 bg-slate-50">
+          <option value="">-- بدون اختيار للهيئة الإدارية --</option>
+          <!-- Exec candidates -->
+        </select>
+      </div>
+
+      <!-- Select Oversight Candidate -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+        <label for="admin-voter-select-oversight" class="block font-bold text-slate-700 flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-accent-orange">gavel</span>
+          <span>2. مرشح الهيئة الرقابية</span>
+        </label>
+        <select id="admin-voter-select-oversight" class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none font-bold text-slate-800 bg-slate-50">
+          <option value="">-- بدون اختيار للهيئة الرقابية --</option>
+          <!-- Oversight candidates -->
+        </select>
+      </div>
+
+      <button type="submit" class="w-full py-3.5 bg-primary hover:bg-[#00626a] text-white font-black rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-[20px]">how_to_vote</span>
+        <span>تأكيد وتوثيق صوت العضو (1 مقترع) 🚀</span>
+      </button>
+    </form>
+  </div>
+</div>
+
 <!-- Toast -->
 <div id="vote-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#1a2f4c] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none translate-y-4 border border-white/20">
   <span class="material-symbols-outlined text-state-success text-[24px]">check_circle</span>
@@ -721,9 +786,11 @@
     titleHeading.textContent = currentSession.title;
 
     const usedCodesCount = (currentSession.accessCodes) ? currentSession.accessCodes.filter(c => c.used).length : 0;
-    const adminVotesCount = (currentSession.publicVoteLog) ? currentSession.publicVoteLog.filter(l => l.code === 'ADMIN' || l.code === 'إدارة الانتخابات').length : 0;
-    const maxCandVotes = currentSession.candidates.length > 0 ? Math.max(...currentSession.candidates.map(c => c.votes)) : 0;
-    const totalVoters = Math.max(usedCodesCount + adminVotesCount, currentSession.publicVoteLog ? currentSession.publicVoteLog.length : 0, maxCandVotes);
+    const execTotalVotes = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية').reduce((sum, c) => sum + c.votes, 0);
+    const oversightTotalVotes = currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية').reduce((sum, c) => sum + c.votes, 0);
+    const logCount = (currentSession.publicVoteLog) ? currentSession.publicVoteLog.length : 0;
+
+    const totalVoters = Math.max(usedCodesCount, logCount, Math.max(execTotalVotes, oversightTotalVotes));
 
     const oversightCandidates = currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية');
     const execCandidates = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية');
@@ -1080,6 +1147,116 @@
 
     showToast(`تم التراجع وإزالة صوت من المرشح: "${candidate.name}"`);
   };
+
+  // ADMIN MEMBER VOTER MODAL (تصويت عضو بدون جوال)
+  window.openAdminVoterModal = function() {
+    if (!currentSession || currentSession.status !== 'active') {
+      showToast('التصويت غير مفتوح حالياً في هذه الجلسة!');
+      return;
+    }
+
+    const codeSelect = document.getElementById('admin-voter-select-code');
+    const execSelect = document.getElementById('admin-voter-select-exec');
+    const oversightSelect = document.getElementById('admin-voter-select-oversight');
+
+    codeSelect.innerHTML = '';
+    execSelect.innerHTML = '<option value="">-- بدون اختيار للهيئة الإدارية --</option>';
+    oversightSelect.innerHTML = '<option value="">-- بدون اختيار للهيئة الرقابية --</option>';
+
+    const codes = currentSession.accessCodes || [];
+    const activeCodes = codes.filter(c => !c.used);
+
+    if (activeCodes.length === 0) {
+      codeSelect.innerHTML += `<option value="ADMIN-OFFLINE">تصويت إداري مباشر (كود مؤقت)</option>`;
+    } else {
+      activeCodes.forEach(c => {
+        codeSelect.innerHTML += `<option value="${c.code}">كود مخصص: ${c.code}</option>`;
+      });
+      codeSelect.innerHTML += `<option value="ADMIN-OFFLINE">كود إداري جديد</option>`;
+    }
+
+    const execCands = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية');
+    execCands.forEach(c => {
+      execSelect.innerHTML += `<option value="${c.id}">${c.name} ${c.teamName ? `(${c.teamName})` : ''}</option>`;
+    });
+
+    const oversightCands = currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية');
+    oversightCands.forEach(c => {
+      oversightSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+    });
+
+    const modal = document.getElementById('admin-voter-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  };
+
+  window.closeAdminVoterModal = function() {
+    const modal = document.getElementById('admin-voter-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  };
+
+  const adminVoterForm = document.getElementById('admin-voter-form');
+  if (adminVoterForm) {
+    adminVoterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!currentSession) return;
+
+      const codeVal = document.getElementById('admin-voter-select-code').value;
+      const execId = parseInt(document.getElementById('admin-voter-select-exec').value) || null;
+      const oversightId = parseInt(document.getElementById('admin-voter-select-oversight').value) || null;
+
+      if (!execId && !oversightId) {
+        alert('يرجى اختيار مرشح واحد على الأقل للمقترع!');
+        return;
+      }
+
+      let candExec = null;
+      let candOversight = null;
+
+      if (execId) {
+        candExec = currentSession.candidates.find(c => c.id === execId);
+        if (candExec) candExec.votes += 1;
+      }
+
+      if (oversightId) {
+        candOversight = currentSession.candidates.find(c => c.id === oversightId);
+        if (candOversight) candOversight.votes += 1;
+      }
+
+      let codeUsedStr = codeVal;
+      if (codeVal === 'ADMIN-OFFLINE') {
+        const randNum = Math.floor(1000 + Math.random() * 9000);
+        codeUsedStr = `SOT-ADMIN-${randNum}`;
+      }
+
+      if (currentSession.accessCodes) {
+        const codeObj = currentSession.accessCodes.find(c => c.code === codeVal);
+        if (codeObj) {
+          codeObj.used = true;
+          codeObj.usedAt = new Date().toISOString();
+          codeObj.votedExecId = execId;
+          codeObj.votedOversightId = oversightId;
+        }
+      }
+
+      if (!currentSession.publicVoteLog) currentSession.publicVoteLog = [];
+
+      currentSession.publicVoteLog.unshift({
+        id: Date.now(),
+        timestamp: new Date().toLocaleTimeString('ar-EG'),
+        code: codeUsedStr,
+        execCandidateName: candExec ? candExec.name : null,
+        oversightCandidateName: candOversight ? candOversight.name : null
+      });
+
+      notifyStateChanged();
+      renderAll();
+      closeAdminVoterModal();
+
+      showToast(`تم توثيق صوت المقترع بنجاح (كود #${codeUsedStr})!`);
+    });
+  }
 
   function renderPublicVoteLog() {
     const box = document.getElementById('public-vote-log-box');
