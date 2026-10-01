@@ -721,7 +721,10 @@
     titleHeading.textContent = currentSession.title;
 
     const usedCodesCount = (currentSession.accessCodes) ? currentSession.accessCodes.filter(c => c.used).length : 0;
-    const totalVoters = usedCodesCount > 0 ? usedCodesCount : (currentSession.publicVoteLog ? currentSession.publicVoteLog.length : 0);
+    const adminVotesCount = (currentSession.publicVoteLog) ? currentSession.publicVoteLog.filter(l => l.code === 'ADMIN' || l.code === 'إدارة الانتخابات').length : 0;
+    const maxCandVotes = currentSession.candidates.length > 0 ? Math.max(...currentSession.candidates.map(c => c.votes)) : 0;
+    const totalVoters = Math.max(usedCodesCount + adminVotesCount, currentSession.publicVoteLog ? currentSession.publicVoteLog.length : 0, maxCandVotes);
+
     const oversightCandidates = currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية');
     const execCandidates = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية');
 
@@ -1022,6 +1025,16 @@
     if (!candidate) return;
 
     candidate.votes += 1;
+
+    if (!currentSession.publicVoteLog) currentSession.publicVoteLog = [];
+    currentSession.publicVoteLog.unshift({
+      id: Date.now(),
+      timestamp: new Date().toLocaleTimeString('ar-EG'),
+      code: 'ADMIN',
+      execCandidateName: candidate.body === 'الهيئة الإدارية' ? candidate.name : null,
+      oversightCandidateName: candidate.body === 'الهيئة الرقابية' ? candidate.name : null
+    });
+
     notifyStateChanged();
     renderAll();
 
@@ -1031,7 +1044,7 @@
       setTimeout(() => card.classList.remove('vote-pulse'), 400);
     }
 
-    showToast(`تم تسجيل صوت لـ "${candidate.name}" بنجاح!`);
+    showToast(`تم تسجيل صوت مباشر من الأدمن لـ "${candidate.name}" بنجاح!`);
   };
 
   // REMOVE VOTE ACTION (-1)
@@ -1048,6 +1061,14 @@
     }
 
     candidate.votes -= 1;
+
+    if (currentSession.publicVoteLog && currentSession.publicVoteLog.length > 0) {
+      const adminIdx = currentSession.publicVoteLog.findIndex(l => (l.code === 'ADMIN' || l.code === 'إدارة الانتخابات') && (l.execCandidateName === candidate.name || l.oversightCandidateName === candidate.name || l.candidateName === candidate.name));
+      if (adminIdx !== -1) {
+        currentSession.publicVoteLog.splice(adminIdx, 1);
+      }
+    }
+
     notifyStateChanged();
     renderAll();
 
@@ -1094,7 +1115,7 @@
 
       item.innerHTML = `
         <div class="flex items-center gap-2 flex-wrap text-xs">
-          <span class="font-mono font-black text-xs text-primary bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200">#${log.code}</span>
+          <span class="font-mono font-black text-xs ${log.code === 'ADMIN' ? 'text-amber-800 bg-amber-100 border border-amber-300' : 'text-primary bg-teal-50 border border-teal-200'} px-2.5 py-0.5 rounded-md">${log.code === 'ADMIN' ? '👑 تصويت إداري' : '#' + log.code}</span>
           <span class="text-slate-800">${votesText}</span>
         </div>
         <span class="text-[11px] text-slate-400 font-mono">${log.timestamp}</span>
