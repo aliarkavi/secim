@@ -233,6 +233,23 @@
     </div>
   </div>
 
+  <!-- PUBLIC LIVE VOTING LOG (سجل الاقتراع العلني اللحظي) -->
+  <div id="public-vote-log-box" class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 mb-6 hidden">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+      <div class="flex items-center gap-2">
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        </span>
+        <h3 class="font-extrabold text-sm text-tertiary">سجل الاقتراع العلني اللحظي (تحديث مباشر للأصوات من الهواتف)</h3>
+      </div>
+      <span id="public-log-count-badge" class="text-xs font-bold text-primary bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200">0 تصويت علني</span>
+    </div>
+    <div id="public-log-feed" class="max-h-36 overflow-y-auto space-y-1.5 text-xs text-slate-700">
+      <div class="text-slate-400 text-center py-2">لا توجد عمليات تصويت علني بالأكواد في هذه الجلسة بعد.</div>
+    </div>
+  </div>
+
   <!-- CANDIDATES & BODIES DISPLAY CONTAINER -->
   <div id="sections-main-container" class="space-y-10">
     <!-- Dynamically Rendered -->
@@ -413,11 +430,56 @@
           </div>
         </div>
 
-        <!-- 3. VOTING LIFECYCLE CONTROLS -->
+        <!-- 3. ACCESS CODES MANAGEMENT SECTION -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h4 class="font-extrabold text-base text-tertiary flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[20px]">vpn_key</span>
+              <span>3. توليد وإدارة أكواد التصويت للأعضاء (Access Codes)</span>
+            </h4>
+            <span id="admin-codes-summary-badge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-teal-100 text-teal-800">0 كود</span>
+          </div>
+
+          <p class="text-xs text-slate-500 leading-relaxed">
+            يمكن للأدمن توليد أكواد تصويت فريدة وتوزيعها على الأعضاء الحاضرين ليصوت كل عضو من هاتفه مرة واحدة فقط، مع بقاء إمكانية التصويت المباشر من شاشة الأدمن.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label for="admin-gen-code-count" class="block text-xs font-bold text-slate-700 mb-1">عدد الأكواد المطلوبة</label>
+              <input type="number" id="admin-gen-code-count" min="1" max="500" value="30"
+                     class="w-full h-10 px-3 text-xs rounded-xl border border-slate-300 focus:border-primary outline-none bg-white font-bold"/>
+            </div>
+
+            <div class="sm:col-span-2 flex items-end gap-2">
+              <button onclick="generateSessionAccessCodes()" class="flex-1 py-2.5 bg-primary hover:bg-[#00626a] text-white font-bold rounded-xl text-xs transition shadow flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">add_task</span>
+                <span>توليد أكواد الجلسة</span>
+              </button>
+              <button onclick="copyAllAccessCodes()" class="py-2.5 px-3 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-bold rounded-xl text-xs transition flex items-center gap-1" title="نسخ كافة الأكواد">
+                <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                <span>نسخ الأكواد</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Codes Table -->
+          <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
+            <div class="p-2 bg-slate-100 text-[11px] font-bold text-slate-700 border-b border-slate-200 flex justify-between items-center">
+              <span>الأكواد المسجلة للجلسة الحالية</span>
+              <button onclick="clearAllSessionCodes()" class="text-red-500 hover:text-red-700 font-semibold text-[10px]">تفريغ الأكواد</button>
+            </div>
+            <div id="admin-codes-table-body" class="max-h-40 overflow-y-auto divide-y divide-slate-100 text-xs text-slate-600">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. VOTING LIFECYCLE CONTROLS -->
         <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
           <h4 class="font-extrabold text-base text-tertiary flex items-center gap-2">
             <span class="material-symbols-outlined text-primary text-[20px]">lock_reset</span>
-            <span>3. التحكم بحالة الاقتراع والتأكيد النهائي</span>
+            <span>4. التحكم بحالة الاقتراع والتأكيد النهائي</span>
           </h4>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -562,6 +624,47 @@
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ================= MODAL 4: MEMBER ACCESS CODE VOTE MODAL ================= -->
+  <div id="code-vote-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative overflow-hidden">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-teal-50 text-primary flex items-center justify-center font-bold">
+            <span class="material-symbols-outlined text-[24px]">vpn_key</span>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-tertiary">تصويت علني كعضو (Access Code)</h3>
+            <p class="text-xs text-slate-500">أدخل كود التصويت المخصص لك لمرة واحدة</p>
+          </div>
+        </div>
+        <button onclick="closeCodeVoteModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <div id="code-modal-cand-info" class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 mb-4 text-xs font-semibold text-slate-700 space-y-1">
+        <!-- Dynamically injected -->
+      </div>
+
+      <form id="code-vote-form" class="space-y-4">
+        <input type="hidden" id="code-modal-cand-id"/>
+        <div>
+          <label for="voter-code-input" class="block text-xs font-bold text-slate-700 mb-1">
+            كود التصويت الخاص بك <span class="text-accent-red">*</span>
+          </label>
+          <input type="text" id="voter-code-input" required placeholder="مثال: SOT-8491"
+                 class="w-full h-12 px-4 text-center text-xl font-black tracking-widest rounded-xl border border-slate-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none uppercase bg-white"/>
+          <p class="text-[11px] text-slate-400 mt-1">الكود يُستخدم مرة واحدة فقط ويمنع التكرار نهائياً.</p>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-primary hover:bg-[#00626a] active:scale-95 text-white font-bold rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[20px]">how_to_vote</span>
+          <span>تأكيد وتسجيل الصوت علنياً</span>
+        </button>
+      </form>
     </div>
   </div>
 
@@ -722,6 +825,26 @@
     } catch(e) {}
   }
 
+  const syncChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('sotkonya_voting_sync') : null;
+
+  if (syncChannel) {
+    syncChannel.onmessage = function(event) {
+      if (event.data && event.data.type === 'SYNC_SESSION') {
+        currentSession = loadCurrentSession();
+        renderAll();
+      }
+    };
+  }
+
+  function notifyStateChanged() {
+    saveCurrentSession();
+    if (syncChannel) {
+      try {
+        syncChannel.postMessage({ type: 'SYNC_SESSION', timestamp: Date.now() });
+      } catch(e) {}
+    }
+  }
+
   window.addEventListener('storage', function(e) {
     if (e.key === MASTER_STORAGE_CURRENT_SESSION) {
       currentSession = loadCurrentSession();
@@ -733,6 +856,7 @@
   function renderAll() {
     renderSessionBanner();
     renderCandidateCards();
+    renderPublicVoteLog();
     if (isAdminVerified) renderAdminPanelData();
   }
 
@@ -934,18 +1058,24 @@
               </div>
             </div>
 
-            <!-- DUAL VOTE ACTIONS: CAST VOTE (+1) AND REMOVE VOTE (-1) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <!-- TRIPLE VOTE ACTIONS: ADMIN DIRECT (+1), MEMBER CODE (🔑), UNDO (-1) -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1.5">
               <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
-                      class="sm:col-span-2 py-3 px-3 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-xs transition shadow flex items-center justify-center gap-1.5">
-                <span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+                      class="sm:col-span-2 py-2.5 px-2 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-xs transition shadow flex items-center justify-center gap-1" title="تصويت مباشر من جهاز الأدمن">
+                <span class="material-symbols-outlined text-[16px]">how_to_vote</span>
                 <span>تصويت (+1)</span>
               </button>
 
+              <button onclick="openCodeVoteModal(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
+                      class="py-2.5 px-1.5 rounded-xl ${currentSession.status === 'active' ? 'bg-amber-500 hover:bg-amber-600 text-white active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} font-bold text-xs transition flex items-center justify-center gap-1 shadow-sm" title="تصويت كعضو باستعمال كود خاص">
+                <span class="material-symbols-outlined text-[15px]">vpn_key</span>
+                <span>بكود 🔑</span>
+              </button>
+
               <button onclick="removeVote(${cand.id})" ${currentSession.status !== 'active' || cand.votes <= 0 ? 'disabled' : ''}
-                      class="py-3 px-2 rounded-xl ${currentSession.status === 'active' && cand.votes > 0 ? 'bg-red-50 hover:bg-red-100 text-accent-red border border-red-200 active:scale-95' : 'bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200'} font-bold text-xs transition flex items-center justify-center gap-1" title="تراجع وإزالة صوت">
-                <span class="material-symbols-outlined text-[16px]">remove_circle_outline</span>
-                <span>تراجع (-1)</span>
+                      class="py-2.5 px-1.5 rounded-xl ${currentSession.status === 'active' && cand.votes > 0 ? 'bg-red-50 hover:bg-red-100 text-accent-red border border-red-200 active:scale-95' : 'bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200'} font-bold text-xs transition flex items-center justify-center gap-1" title="تراجع وإزالة صوت">
+                <span class="material-symbols-outlined text-[15px]">remove_circle_outline</span>
+                <span>(-1)</span>
               </button>
             </div>
           `;
@@ -1050,18 +1180,24 @@
               </div>
             </div>
 
-            <!-- DUAL VOTE ACTIONS: CAST VOTE (+1) AND REMOVE VOTE (-1) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <!-- TRIPLE VOTE ACTIONS: ADMIN DIRECT (+1), MEMBER CODE (🔑), UNDO (-1) -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1.5">
               <button onclick="castVote(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
-                      class="sm:col-span-2 py-3 px-3 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-xs transition shadow flex items-center justify-center gap-1.5">
-                <span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+                      class="sm:col-span-2 py-2.5 px-2 rounded-xl ${currentSession.status === 'active' ? 'bg-primary hover:bg-[#00626a] active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} text-white font-bold text-xs transition shadow flex items-center justify-center gap-1" title="تصويت مباشر من جهاز الأدمن">
+                <span class="material-symbols-outlined text-[16px]">how_to_vote</span>
                 <span>تصويت (+1)</span>
               </button>
 
+              <button onclick="openCodeVoteModal(${cand.id})" ${currentSession.status !== 'active' ? 'disabled' : ''}
+                      class="py-2.5 px-1.5 rounded-xl ${currentSession.status === 'active' ? 'bg-amber-500 hover:bg-amber-600 text-white active:scale-95' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} font-bold text-xs transition flex items-center justify-center gap-1 shadow-sm" title="تصويت كعضو باستعمال كود خاص">
+                <span class="material-symbols-outlined text-[15px]">vpn_key</span>
+                <span>بكود 🔑</span>
+              </button>
+
               <button onclick="removeVote(${cand.id})" ${currentSession.status !== 'active' || cand.votes <= 0 ? 'disabled' : ''}
-                      class="py-3 px-2 rounded-xl ${currentSession.status === 'active' && cand.votes > 0 ? 'bg-red-50 hover:bg-red-100 text-accent-red border border-red-200 active:scale-95' : 'bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200'} font-bold text-xs transition flex items-center justify-center gap-1" title="تراجع وإزالة صوت">
-                <span class="material-symbols-outlined text-[16px]">remove_circle_outline</span>
-                <span>تراجع (-1)</span>
+                      class="py-2.5 px-1.5 rounded-xl ${currentSession.status === 'active' && cand.votes > 0 ? 'bg-red-50 hover:bg-red-100 text-accent-red border border-red-200 active:scale-95' : 'bg-slate-100 text-slate-300 cursor-not-allowed border border-slate-200'} font-bold text-xs transition flex items-center justify-center gap-1" title="تراجع وإزالة صوت">
+                <span class="material-symbols-outlined text-[15px]">remove_circle_outline</span>
+                <span>(-1)</span>
               </button>
             </div>
           `;
@@ -1136,6 +1272,149 @@
 
     showToast(`تم التراجع وإزالة صوت من المرشح: "${candidate.name}"`);
   };
+
+  // MEMBER CODE VOTING MODAL LOGIC
+  window.openCodeVoteModal = function(candidateId) {
+    if (!currentSession || currentSession.status !== 'active') {
+      showToast('التصويت غير مفتوح حالياً في هذه الجلسة!');
+      return;
+    }
+
+    const candidate = currentSession.candidates.find(c => c.id === candidateId);
+    if (!candidate) return;
+
+    document.getElementById('code-modal-cand-id').value = candidateId;
+    document.getElementById('voter-code-input').value = '';
+
+    const infoBox = document.getElementById('code-modal-cand-info');
+    infoBox.innerHTML = `
+      <div><strong>المرشح:</strong> <span class="text-tertiary font-bold">${candidate.name}</span></div>
+      <div><strong>الهيئة:</strong> <span class="text-primary font-bold">${candidate.body}</span></div>
+      ${candidate.teamName ? `<div><strong>القائمة:</strong> <span class="text-slate-600">${candidate.teamName}</span></div>` : ''}
+      <div><strong>الجامعة:</strong> ${candidate.university}</div>
+    `;
+
+    const modal = document.getElementById('code-vote-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    setTimeout(() => document.getElementById('voter-code-input').focus(), 100);
+  };
+
+  window.closeCodeVoteModal = function() {
+    const modal = document.getElementById('code-vote-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  };
+
+  const codeVoteForm = document.getElementById('code-vote-form');
+  if (codeVoteForm) {
+    codeVoteForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const candId = parseInt(document.getElementById('code-modal-cand-id').value);
+      const codeVal = document.getElementById('voter-code-input').value;
+
+      if (voteWithAccessCode(candId, codeVal)) {
+        closeCodeVoteModal();
+      }
+    });
+  }
+
+  window.voteWithAccessCode = function(candidateId, codeInput) {
+    if (!currentSession || currentSession.status !== 'active') {
+      showToast('التصويت غير مفتوح حالياً في هذه الجلسة!');
+      return false;
+    }
+
+    if (!currentSession.accessCodes) currentSession.accessCodes = [];
+    if (!currentSession.publicVoteLog) currentSession.publicVoteLog = [];
+
+    const candidate = currentSession.candidates.find(c => c.id === candidateId);
+    if (!candidate) return false;
+
+    const normalizedCode = codeInput ? codeInput.trim().toUpperCase() : '';
+    if (!normalizedCode) {
+      alert('يرجى إدخال كود التصويت الخاص بك!');
+      return false;
+    }
+
+    const codeObj = currentSession.accessCodes.find(c => c.code.toUpperCase() === normalizedCode);
+
+    if (!codeObj) {
+      alert('❌ عذراً! كود التصويت غير صحيح أو غير مسجل في هذه الجلسة. يرجى التأكد من الكود الموزع عليك.');
+      return false;
+    }
+
+    if (codeObj.used) {
+      const usedTime = codeObj.usedAt ? new Date(codeObj.usedAt).toLocaleTimeString('ar-EG') : '';
+      alert(`⚠️ عذراً! كود التصويت (${codeObj.code}) تم استخدامه سابقاً للتصويت في الساعة ${usedTime} ولا يمكن التصويت به أكثر من مرة!`);
+      return false;
+    }
+
+    // Mark code used
+    codeObj.used = true;
+    codeObj.usedAt = new Date().toISOString();
+    codeObj.votedCandidateId = candidate.id;
+    codeObj.candidateName = candidate.name;
+
+    // Increment candidate votes
+    candidate.votes += 1;
+
+    // Record public vote log
+    currentSession.publicVoteLog.unshift({
+      id: Date.now(),
+      timestamp: new Date().toLocaleTimeString('ar-EG'),
+      code: codeObj.code,
+      candidateId: candidate.id,
+      candidateName: candidate.name,
+      body: candidate.body
+    });
+
+    notifyStateChanged();
+    renderAll();
+
+    const card = document.getElementById(`candidate-card-${candidateId}`);
+    if (card) {
+      card.classList.add('vote-pulse');
+      setTimeout(() => card.classList.remove('vote-pulse'), 400);
+    }
+
+    showToast(`🎉 تم تسجيل صوتك العلني بنجاح للمرشح "${candidate.name}" باستخدام كود #${codeObj.code}!`);
+    return true;
+  };
+
+  function renderPublicVoteLog() {
+    const box = document.getElementById('public-vote-log-box');
+    const feed = document.getElementById('public-log-feed');
+    const badge = document.getElementById('public-log-count-badge');
+
+    if (!box || !feed || !badge) return;
+
+    const logs = (currentSession && currentSession.publicVoteLog) ? currentSession.publicVoteLog : [];
+
+    if (logs.length === 0) {
+      box.classList.add('hidden');
+      feed.innerHTML = `<div class="text-slate-400 text-center py-2">لا توجد عمليات تصويت علني بالأكواد في هذه الجلسة بعد.</div>`;
+      return;
+    }
+
+    box.classList.remove('hidden');
+    badge.textContent = `${logs.length} تصويت علني`;
+
+    feed.innerHTML = '';
+    logs.slice(0, 15).forEach(log => {
+      const item = document.createElement('div');
+      item.className = 'p-2 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2 hover:bg-slate-100 transition';
+      item.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="font-mono font-black text-xs text-primary bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">#${log.code}</span>
+          <span class="font-bold text-slate-800">صوّت لـ: <strong class="text-tertiary">${log.candidateName}</strong></span>
+          <span class="text-[10px] text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded-full">${log.body}</span>
+        </div>
+        <span class="text-[11px] text-slate-400 font-mono">${log.timestamp}</span>
+      `;
+      feed.appendChild(item);
+    });
+  }
 
   // ADMIN MODAL & CONTROLS
   function openAdminModal() {
@@ -1257,6 +1536,101 @@
         candTableBody.appendChild(row);
       });
     }
+
+    renderAdminCodesTable();
+  }
+
+  // ACCESS CODES MANAGEMENT FUNCTIONS
+  window.generateSessionAccessCodes = function() {
+    if (!currentSession) {
+      showToast('قم بإنشاء جلسة انتخابية أولاً!');
+      return;
+    }
+
+    const countInput = document.getElementById('admin-gen-code-count');
+    const count = parseInt(countInput.value) || 30;
+
+    if (!currentSession.accessCodes) currentSession.accessCodes = [];
+    if (!currentSession.publicVoteLog) currentSession.publicVoteLog = [];
+
+    const existingSet = new Set(currentSession.accessCodes.map(c => c.code));
+
+    let createdCount = 0;
+    while (createdCount < count) {
+      const randNum = Math.floor(1000 + Math.random() * 9000);
+      const codeStr = `SOT-${randNum}`;
+      if (!existingSet.has(codeStr)) {
+        existingSet.add(codeStr);
+        currentSession.accessCodes.push({
+          code: codeStr,
+          used: false,
+          usedAt: null,
+          votedCandidateId: null,
+          candidateName: null
+        });
+        createdCount++;
+      }
+    }
+
+    notifyStateChanged();
+    renderAdminPanelData();
+    showToast(`تم توليد ${createdCount} كود جديد بنجاح!`);
+  };
+
+  window.copyAllAccessCodes = function() {
+    if (!currentSession || !currentSession.accessCodes || currentSession.accessCodes.length === 0) {
+      showToast('لا توجد أكواد مسجلة بعد لنسخها!');
+      return;
+    }
+
+    const activeCodes = currentSession.accessCodes.filter(c => !c.used).map(c => c.code).join('\n');
+    navigator.clipboard.writeText(activeCodes).then(() => {
+      showToast(`تم نسخ ${currentSession.accessCodes.filter(c => !c.used).length} كود نَشِط غير مستخدم إلى الحافظة!`);
+    }).catch(() => {
+      prompt('قائمة الأكواد النشطة غير المستخدمة:', activeCodes);
+    });
+  };
+
+  window.clearAllSessionCodes = function() {
+    if (!currentSession || !currentSession.accessCodes || currentSession.accessCodes.length === 0) return;
+    if (confirm('هل ترغب في مسح وتفريغ جميع الأكواد المسجلة في هذه الجلسة؟')) {
+      currentSession.accessCodes = [];
+      notifyStateChanged();
+      renderAdminPanelData();
+      showToast('تم تفريغ قائمة الأكواد.');
+    }
+  };
+
+  function renderAdminCodesTable() {
+    const tableBody = document.getElementById('admin-codes-table-body');
+    const badge = document.getElementById('admin-codes-summary-badge');
+    if (!tableBody || !badge) return;
+
+    tableBody.innerHTML = '';
+    const codes = (currentSession && currentSession.accessCodes) ? currentSession.accessCodes : [];
+
+    const usedCount = codes.filter(c => c.used).length;
+    badge.textContent = `${codes.length} كود (${usedCount} مُستخدم / ${codes.length - usedCount} نَشِط)`;
+
+    if (codes.length === 0) {
+      tableBody.innerHTML = `<div class="p-3 text-center text-slate-400">لا توجد أكواد مولدة بعد. انقر على "توليد أكواد الجلسة".</div>`;
+      return;
+    }
+
+    codes.forEach(c => {
+      const row = document.createElement('div');
+      row.className = 'p-2 flex items-center justify-between gap-2 hover:bg-slate-50';
+      row.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="font-mono font-black text-xs text-tertiary bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">${c.code}</span>
+          ${c.used ? `<span class="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">🔴 مُستخدم (${c.candidateName || 'صوت'})</span>` : `<span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">🟢 نَشِط</span>`}
+        </div>
+        <div class="text-[11px] text-slate-400 font-mono">
+          ${c.usedAt ? new Date(c.usedAt).toLocaleTimeString('ar-EG') : 'جاهز'}
+        </div>
+      `;
+      tableBody.appendChild(row);
+    });
   }
 
   // CREATE SESSION SUBMIT
