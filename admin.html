@@ -141,7 +141,7 @@
       <!-- Metric Badges Breakdown -->
       <div id="session-metrics-container" class="grid grid-cols-3 gap-3 shrink-0">
         <div class="bg-white/15 backdrop-blur-md rounded-2xl p-3.5 text-center border border-white/20 shadow-sm min-w-[95px] sm:min-w-[115px]">
-          <span class="text-xs text-white/80 font-medium block mb-1">إجمالي الأصوات</span>
+          <span class="text-xs text-white/80 font-medium block mb-1">إجمالي المقترعين</span>
           <span class="text-2xl sm:text-3xl font-black text-white" id="stat-total-votes">0</span>
           <span class="text-[10px] sm:text-[11px] text-accent-yellow font-bold mt-1 block">تحديث مباشر 🟢</span>
         </div>
@@ -720,11 +720,12 @@
     dateTag.textContent = formattedDate;
     titleHeading.textContent = currentSession.title;
 
-    const totalVotes = currentSession.candidates.reduce((sum, c) => sum + c.votes, 0);
+    const usedCodesCount = (currentSession.accessCodes) ? currentSession.accessCodes.filter(c => c.used).length : 0;
+    const totalVoters = usedCodesCount > 0 ? usedCodesCount : (currentSession.publicVoteLog ? currentSession.publicVoteLog.length : 0);
     const oversightCandidates = currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية');
     const execCandidates = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية');
 
-    document.getElementById('stat-total-votes').textContent = totalVotes.toLocaleString('ar-EG');
+    document.getElementById('stat-total-votes').textContent = totalVoters.toLocaleString('ar-EG');
     document.getElementById('stat-oversight-count').textContent = oversightCandidates.length;
     document.getElementById('stat-executive-count').textContent = execCandidates.length;
 
@@ -1073,17 +1074,28 @@
     }
 
     box.classList.remove('hidden');
-    badge.textContent = `${logs.length} تصويت علني`;
+    badge.textContent = `${logs.length} مقترع علني`;
 
     feed.innerHTML = '';
     logs.slice(0, 15).forEach(log => {
       const item = document.createElement('div');
-      item.className = 'p-2 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2 hover:bg-slate-100 transition';
+      item.className = 'p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-slate-100 transition';
+
+      let votesText = '';
+      if (log.execCandidateName && log.oversightCandidateName) {
+        votesText = `الإدارية: <strong class="text-primary font-bold">${log.execCandidateName}</strong> <span class="text-slate-300 font-bold mx-1">|</span> الرقابية: <strong class="text-accent-orange font-bold">${log.oversightCandidateName}</strong>`;
+      } else if (log.execCandidateName) {
+        votesText = `الإدارية: <strong class="text-primary font-bold">${log.execCandidateName}</strong>`;
+      } else if (log.oversightCandidateName) {
+        votesText = `الرقابية: <strong class="text-accent-orange font-bold">${log.oversightCandidateName}</strong>`;
+      } else if (log.candidateName) {
+        votesText = `صوّت لـ: <strong class="text-tertiary">${log.candidateName}</strong> <span class="text-[10px] text-slate-500">(${log.body})</span>`;
+      }
+
       item.innerHTML = `
-        <div class="flex items-center gap-2">
-          <span class="font-mono font-black text-xs text-primary bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">#${log.code}</span>
-          <span class="font-bold text-slate-800">صوّت لـ: <strong class="text-tertiary">${log.candidateName}</strong></span>
-          <span class="text-[10px] text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded-full">${log.body}</span>
+        <div class="flex items-center gap-2 flex-wrap text-xs">
+          <span class="font-mono font-black text-xs text-primary bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-200">#${log.code}</span>
+          <span class="text-slate-800">${votesText}</span>
         </div>
         <span class="text-[11px] text-slate-400 font-mono">${log.timestamp}</span>
       `;

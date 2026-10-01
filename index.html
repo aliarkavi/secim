@@ -510,44 +510,37 @@
     }
 
     let summaryHtml = '';
+    let candExec = null;
+    let candOversight = null;
 
     // Process Exec Vote
     if (selectedExecCandidateId) {
-      const candExec = currentSession.candidates.find(c => c.id === selectedExecCandidateId);
+      candExec = currentSession.candidates.find(c => c.id === selectedExecCandidateId);
       if (candExec) {
         candExec.votes += 1;
         summaryHtml += `<div class="p-2.5 bg-white rounded-xl border border-slate-200"><strong>الهيئة الإدارية:</strong> <span class="text-primary font-bold">${candExec.name}</span></div>`;
-        
-        if (!currentSession.publicVoteLog) currentSession.publicVoteLog = [];
-        currentSession.publicVoteLog.unshift({
-          id: Date.now(),
-          timestamp: new Date().toLocaleTimeString('ar-EG'),
-          code: authenticatedCodeObj.code,
-          candidateId: candExec.id,
-          candidateName: candExec.name,
-          body: candExec.body
-        });
       }
     }
 
     // Process Oversight Vote
     if (selectedOversightCandidateId) {
-      const candOversight = currentSession.candidates.find(c => c.id === selectedOversightCandidateId);
+      candOversight = currentSession.candidates.find(c => c.id === selectedOversightCandidateId);
       if (candOversight) {
         candOversight.votes += 1;
         summaryHtml += `<div class="p-2.5 bg-white rounded-xl border border-slate-200"><strong>الهيئة الرقابية:</strong> <span class="text-accent-orange font-bold">${candOversight.name}</span></div>`;
-
-        if (!currentSession.publicVoteLog) currentSession.publicVoteLog = [];
-        currentSession.publicVoteLog.unshift({
-          id: Date.now() + 1,
-          timestamp: new Date().toLocaleTimeString('ar-EG'),
-          code: authenticatedCodeObj.code,
-          candidateId: candOversight.id,
-          candidateName: candOversight.name,
-          body: candOversight.body
-        });
       }
     }
+
+    if (!currentSession.publicVoteLog) currentSession.publicVoteLog = [];
+
+    // Single combined log entry per voter code
+    currentSession.publicVoteLog.unshift({
+      id: Date.now(),
+      timestamp: new Date().toLocaleTimeString('ar-EG'),
+      code: authenticatedCodeObj.code,
+      execCandidateName: candExec ? candExec.name : null,
+      oversightCandidateName: candOversight ? candOversight.name : null
+    });
 
     // Mark code used in session object
     const sessionCodeObj = currentSession.accessCodes.find(c => c.code.toUpperCase() === authenticatedCodeObj.code.toUpperCase());
