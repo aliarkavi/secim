@@ -1664,23 +1664,27 @@
   });
 
   // OFFICIAL RESULTS MODAL LOGIC
-  function openOfficialResultsModal() {
-    if (!currentSession) return;
+  let currentlyViewedAdminResultsSession = null;
+
+  function openOfficialResultsModal(sessionData = null) {
+    const targetSession = sessionData || currentSession;
+    if (!targetSession) return;
+    currentlyViewedAdminResultsSession = targetSession;
 
     const modal = document.getElementById('official-results-modal');
     modal.classList.remove('hidden');
     modal.classList.add('flex');
 
-    document.getElementById('results-session-title-sub').textContent = currentSession.title;
-    document.getElementById('print-session-title').textContent = currentSession.title;
-    document.getElementById('print-session-date').textContent = "تاريخ التوثيق والإغلاق: " + new Date(currentSession.date).toLocaleString('ar-EG');
+    document.getElementById('results-session-title-sub').textContent = targetSession.title;
+    document.getElementById('print-session-title').textContent = targetSession.title;
+    document.getElementById('print-session-date').textContent = "تاريخ التوثيق والإغلاق: " + new Date(targetSession.date || Date.now()).toLocaleString('ar-EG');
 
-    const totalVotes = currentSession.candidates.reduce((sum, c) => sum + c.votes, 0);
+    const totalVotes = targetSession.candidates ? targetSession.candidates.reduce((sum, c) => sum + c.votes, 0) : 0;
     document.getElementById('results-total-votes-badge').textContent = `إجمالي أصوات الجلسة: ${totalVotes.toLocaleString('ar-EG')} صوت`;
 
     const execBox = document.getElementById('results-exec-winner-box');
-    let execSorted = [...currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية')].sort((a,b) => b.votes - a.votes);
-    let execTotalVotes = currentSession.candidates.filter(c => c.body === 'الهيئة الإدارية').reduce((sum, c) => sum + c.votes, 0);
+    let execSorted = [...(targetSession.candidates || []).filter(c => c.body === 'الهيئة الإدارية')].sort((a,b) => b.votes - a.votes);
+    let execTotalVotes = (targetSession.candidates || []).filter(c => c.body === 'الهيئة الإدارية').reduce((sum, c) => sum + c.votes, 0);
 
     if (execSorted.length > 0 && execSorted[0].votes > 0) {
       const winner = execSorted[0];
@@ -1701,8 +1705,8 @@
     }
 
     const oversightBox = document.getElementById('results-oversight-winners-box');
-    let sortedOversight = [...currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية')].sort((a,b) => b.votes - a.votes);
-    let oversightTotalVotes = currentSession.candidates.filter(c => c.body === 'الهيئة الرقابية').reduce((sum, c) => sum + c.votes, 0);
+    let sortedOversight = [...(targetSession.candidates || []).filter(c => c.body === 'الهيئة الرقابية')].sort((a,b) => b.votes - a.votes);
+    let oversightTotalVotes = (targetSession.candidates || []).filter(c => c.body === 'الهيئة الرقابية').reduce((sum, c) => sum + c.votes, 0);
 
     if (sortedOversight.length > 0 && sortedOversight[0].votes > 0) {
       let top3 = sortedOversight.slice(0, 3).filter(c => c.votes > 0);
@@ -1731,8 +1735,8 @@
 
     const tableBody = document.getElementById('results-table-body');
     tableBody.innerHTML = '';
-    currentSession.candidates.forEach((cand, idx) => {
-      const totalBodyVotes = currentSession.candidates.filter(c => c.body === cand.body).reduce((sum, c) => sum + c.votes, 0);
+    (targetSession.candidates || []).forEach((cand, idx) => {
+      const totalBodyVotes = targetSession.candidates.filter(c => c.body === cand.body).reduce((sum, c) => sum + c.votes, 0);
       const pct = totalBodyVotes > 0 ? ((cand.votes / totalBodyVotes) * 100).toFixed(1) : 0;
       
       const row = document.createElement('tr');
@@ -1757,12 +1761,13 @@
   }
 
   function downloadCurrentCSV() {
-    if (!currentSession) return;
-    let csvContent = "\uFEFFعنوان الجلسة," + currentSession.title + "\n";
-    csvContent += "التاريخ," + new Date(currentSession.date).toLocaleString('ar-EG') + "\n\n";
+    const sess = currentlyViewedAdminResultsSession || currentSession;
+    if (!sess) return;
+    let csvContent = "\uFEFFعنوان الجلسة," + sess.title + "\n";
+    csvContent += "التاريخ," + new Date(sess.date || Date.now()).toLocaleString('ar-EG') + "\n\n";
     csvContent += "الرقم,اسم المرشح,اسم القائمة,الهيئة,الجامعة,الكلية والتخصص,عدد الأصوات\n";
 
-    currentSession.candidates.forEach(c => {
+    (sess.candidates || []).forEach(c => {
       csvContent += `${c.id},"${c.name}","${c.teamName || '-'}","${c.body}","${c.university}","${c.faculty}",${c.votes}\n`;
     });
 
@@ -1770,7 +1775,7 @@
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `تقرير_جلسة_${currentSession.title.replace(/\s+/g, '_')}.csv`);
+    link.setAttribute("download", `تقرير_جلسة_${sess.title.replace(/\s+/g, '_')}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1804,7 +1809,7 @@
       const card = document.createElement('div');
       card.className = 'bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-3';
       const formattedDate = new Date(sess.date).toLocaleString('ar-EG');
-      const totalVotes = sess.candidates.reduce((sum, c) => sum + c.votes, 0);
+      const totalVotes = (sess.candidates || []).reduce((sum, c) => sum + c.votes, 0);
 
       card.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
@@ -1819,6 +1824,10 @@
         </div>
 
         <div class="pt-2 flex items-center justify-between gap-2 flex-wrap">
+          <button onclick="openOfficialResultsModal(archivedSessions.find(s => s.id === '${sess.id}'))" class="px-3.5 py-1.5 bg-primary hover:bg-[#00626a] text-white font-bold text-xs rounded-xl transition flex items-center gap-1 shadow-sm">
+            <span class="material-symbols-outlined text-[16px]">emoji_events</span>
+            <span>عرض النتائج 🏆</span>
+          </button>
           <button onclick="deleteArchivedSession('${sess.id}')" class="px-3 py-1.5 bg-red-50 border border-red-200 hover:bg-red-100 text-red-700 font-bold text-xs rounded-xl transition flex items-center gap-1">
             <span class="material-symbols-outlined text-[16px]">delete</span>
             <span>حذف الجلسة</span>
